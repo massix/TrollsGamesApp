@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/main_group" android:checkableBehavior="single">
+        <item android:title="Utilisateurs"
+              android:checkable="true"
+              android:id="@+id/nav_users">
+                <menu/>
+        </item>i
+    </group>
+</menu>
