@@ -1,8 +1,7 @@
 package rocks.massi.trollsgames.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,9 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
+import rocks.massi.trollsgames.GlideApp;
 import rocks.massi.trollsgames.R;
-import rocks.massi.trollsgames.async.BGGImagesConnector;
-import rocks.massi.trollsgames.cache.ImagesCache;
 import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.events.GameSelectedEvent;
 
@@ -34,18 +32,14 @@ public class GamesAdapter extends ArrayAdapter<Game> {
         }
 
         TextView tv = convertView.findViewById(R.id.gameName);
+        tv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "font/Montserrat-Regular.ttf"));
         tv.setText(g.getName());
         ImageView iv = convertView.findViewById(R.id.gameImage);
-        Bitmap image = ImagesCache.getInstance().get(g.getThumbnail());
-
-        if (image != null) {
-            iv.setImageBitmap(image);
-        }
-
-        else {
-            iv.setImageResource(R.drawable.ic_search_black_24dp);
-            new BGGImagesConnector(iv).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, g.getThumbnail());
-        }
+        GlideApp.with(convertView)
+                .load(g.getNormalizedThumbnail())
+                .placeholder(R.drawable.ic_search_black_24dp)
+                .fitCenter()
+                .into(iv);
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override

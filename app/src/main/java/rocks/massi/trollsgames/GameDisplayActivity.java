@@ -1,6 +1,5 @@
 package rocks.massi.trollsgames;
 
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,10 +9,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
-import org.w3c.dom.Text;
-import rocks.massi.trollsgames.async.BGGImagesConnector;
-import rocks.massi.trollsgames.cache.ImagesCache;
 import rocks.massi.trollsgames.constants.Extra;
 import rocks.massi.trollsgames.data.Game;
 
@@ -36,15 +31,12 @@ public class GameDisplayActivity extends AppCompatActivity {
                         String.format(Locale.FRANCE, " à %d", g.getMaxPlayers()) : ""));
 
         ImageView iv = (ImageView) findViewById(R.id.gameDisplayImage);
-        Bitmap image = ImagesCache.getInstance().get(g.getThumbnail());
 
-        if (image != null) {
-            iv.setImageBitmap(image);
-        }
-
-        else {
-            new BGGImagesConnector(iv).execute(g.getThumbnail());
-        }
+        GlideApp.with(this)
+                .load(g.getNormalizedThumbnail())
+                .placeholder(R.drawable.ic_search_black_24dp)
+                .fitCenter()
+                .into(iv);
 
         TextView gameDescription = (TextView) findViewById(R.id.gameDisplayDescription);
         gameDescription.setText(Html.fromHtml(g.getDescription(), Html.FROM_HTML_MODE_COMPACT));

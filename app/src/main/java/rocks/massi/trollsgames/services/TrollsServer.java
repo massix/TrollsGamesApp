@@ -11,6 +11,9 @@ public interface TrollsServer {
     @RequestLine("GET /v1/users/get")
     List<User> getUsers();
 
+    @RequestLine("GET /v1/games/get")
+    List<Game> getGames();
+
     @RequestLine("GET /v1/users/get/{nick}")
     User getUser(@Param("nick") String nick);
 

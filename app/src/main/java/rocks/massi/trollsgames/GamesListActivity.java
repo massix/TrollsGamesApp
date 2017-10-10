@@ -12,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -24,11 +23,11 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import rocks.massi.trollsgames.adapter.GamesAdapter;
+import rocks.massi.trollsgames.async.GamesAsyncConnector;
 import rocks.massi.trollsgames.async.UsersAsyncConnector;
 import rocks.massi.trollsgames.constants.Extra;
 import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.data.User;
-import rocks.massi.trollsgames.events.GameFetchedEvent;
 import rocks.massi.trollsgames.events.GameSelectedEvent;
 import rocks.massi.trollsgames.events.UserFetchEvent;
 import rocks.massi.trollsgames.events.UsersFetchedEvent;
@@ -39,13 +38,13 @@ import java.util.List;
 public class GamesListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private List<User> cachedUsers;
-    private List<Game> cachedGames;
+    private List<User> users;
+    private List<Game> shownGames;
+
     private GamesAdapter gamesAdapterAdapter;
     private boolean operationPending;
 
     private ProgressBar loadingUsersPb;
-    private ProgressBar loadingGamePb;
     private TextView loadingUsersTv;
 
     @Override
@@ -65,35 +64,23 @@ public class GamesListActivity extends AppCompatActivity
         findViewById(R.id.fab).setEnabled(true);
         operationPending = false;
 
-        loadingUsersPb.setIndeterminate(false);
-        loadingUsersPb.setMax(100);
-        loadingUsersPb.setProgress(100, true);
-
         loadingUsersPb.setVisibility(View.INVISIBLE);
-        loadingGamePb.setVisibility(View.INVISIBLE);
+
         loadingUsersTv.setText("C'est fini ! Vous pouvez maintenant cliquer sur un utilisateur dans le menu de gauche !");
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, priority = 100)
     protected void onUserEvent(final UserFetchEvent userFetchEvent) {
         if (userFetchEvent.isFinished()) {
             SubMenu menu = ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(0).getSubMenu();
-            menu.add(Menu.NONE, cachedUsers.size(), cachedUsers.size(), userFetchEvent.getUser().getForumNick());
-            cachedUsers.add(userFetchEvent.getUser());
+            menu.add(Menu.NONE, users.size(), users.size(), userFetchEvent.getUser().getForumNick());
+            users.add(userFetchEvent.getUser());
+            loadingUsersPb.setProgress(loadingUsersPb.getProgress() + 1, true);
         }
-
         else {
-            loadingUsersTv.setText(Html.fromHtml(String.format("Je télécharge les informations pour l'utilisateur <b>%s</b>",
-                userFetchEvent.getUser().getForumNick()),
-                Html.FROM_HTML_MODE_COMPACT));
-            loadingGamePb.setMax(userFetchEvent.getUser().getCollection().size());
-            loadingGamePb.setProgress(0);
+            loadingUsersPb.setIndeterminate(false);
+            loadingUsersPb.setMax(userFetchEvent.getTotalUsers());
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    protected void onGameFetchedEvent(final GameFetchedEvent gameFetchedEvent) {
-        loadingGamePb.setProgress(loadingGamePb.getProgress() + 1);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -107,41 +94,39 @@ public class GamesListActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_games_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        cachedUsers = new LinkedList<>();
-        cachedGames = new LinkedList<>();
+        users = new LinkedList<>();
+        shownGames = new LinkedList<>();
 
-        loadingUsersTv = (TextView) findViewById(R.id.loadingUserInfo);
-        loadingUsersPb = (ProgressBar) findViewById(R.id.loadingUsersBar);
-        loadingGamePb = (ProgressBar) findViewById(R.id.gamesLoadingBar);
-
-        loadingGamePb.setVisibility(View.INVISIBLE);
-        loadingUsersPb.setVisibility(View.INVISIBLE);
+        loadingUsersTv = findViewById(R.id.loadingUserInfo);
+        loadingUsersPb = findViewById(R.id.gamesLoadingBar);
         loadingUsersTv.setTypeface(Typeface.createFromAsset(getAssets(), "font/Raleway-Regular.ttf"));
 
         loadingUsersTv.setText("Veuillez cliquer sur le petit bouton en bas à droite pour " +
                 "télécharger les informations des utilisateurs !");
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FloatingActionButton f = (FloatingActionButton) findViewById(R.id.fab);
+                FloatingActionButton f = findViewById(R.id.fab);
                 f.setEnabled(false);
 
                 // Refresh Submenu
                 ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(0).getSubMenu().clear();
-                cachedUsers.clear();
-                cachedGames.clear();
+                users.clear();
+                shownGames.clear();
                 gamesAdapterAdapter.notifyDataSetChanged();
+
+                new GamesAsyncConnector().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 new UsersAsyncConnector().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
                 loadingUsersPb.setVisibility(View.VISIBLE);
+                loadingUsersPb.setProgress(0, true);
                 loadingUsersTv.setVisibility(View.VISIBLE);
-                loadingGamePb.setVisibility(View.VISIBLE);
-                loadingGamePb.setIndeterminate(false);
-                loadingGamePb.setMax(0);
+
                 loadingUsersTv.setText("Je télécharge les informations des utilisateurs...");
 
                 getSupportActionBar().setTitle(R.string.app_name);
@@ -151,23 +136,23 @@ public class GamesListActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ListView lv = (ListView) findViewById(R.id.gameslist);
-        gamesAdapterAdapter = new GamesAdapter(getApplicationContext(), 0, cachedGames);
+        ListView lv = findViewById(R.id.gameslist);
+        gamesAdapterAdapter = new GamesAdapter(getApplicationContext(), 0, shownGames);
         lv.setAdapter(gamesAdapterAdapter);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -200,7 +185,7 @@ public class GamesListActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
         if (operationPending) {
             drawer.closeDrawer(GravityCompat.START);
@@ -209,23 +194,23 @@ public class GamesListActivity extends AppCompatActivity
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        User user = cachedUsers.get(id);
+        User user = users.get(id);
 
-        cachedGames.clear();
+        shownGames.clear();
 
         for (Game g : user.getGamesCollection()) {
-            if (! g.isExtension()) cachedGames.add(g);
+            if (! g.isExtension() && ! shownGames.contains(g))
+                shownGames.add(g);
         }
 
-        ListView lv = (ListView) findViewById(R.id.gameslist);
+        ListView lv = findViewById(R.id.gameslist);
         loadingUsersTv.setVisibility(View.INVISIBLE);
 
         gamesAdapterAdapter.notifyDataSetChanged();
         lv.setSelectionAfterHeaderView();
 
-        Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
-        tb.setTitle(user.getForumNick());
-        tb.setSubtitle(user.getCollection().size() + " jeux possédés");
+        getSupportActionBar().setTitle(user.getForumNick());
+        getSupportActionBar().setSubtitle(user.getCollection().size() + " jeux possédés");
 
         drawer.closeDrawer(GravityCompat.START);
         return true;

@@ -22,6 +22,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_games_list"/>
+    <include layout="@layout/sample_loading_view"/>
 
     <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"

@@ -16,6 +16,8 @@ import java.util.List;
 
 public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
     private TrollsServer connector;
+    private List<Game> games;
+    private List<User> users;
 
     public UsersAsyncConnector() {
         connector = Feign.builder()
@@ -23,18 +25,28 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
                 .target(TrollsServer.class, "http://massi.rocks:8180");
     }
 
+    private Game extractGameForId(int gameId) {
+        for (Game g : games) {
+            if (g.getId() == gameId)
+                return g;
+        }
+
+        return null;
+    }
+
     @Override
     protected List<User> doInBackground(Void... voids) {
-        List<User> users = connector.getUsers();
+        users = connector.getUsers();
+        games = connector.getGames();
 
         for (User u : users) {
             u.buildCollection();
             u.setGamesCollection(new LinkedList<Game>());
-            EventBus.getDefault().post(new UserFetchEvent(false, u));
+            EventBus.getDefault().post(new UserFetchEvent(false, u, users.size()));
 
             for (Integer gameId : u.getCollection()) {
-                Game g = connector.getGame(gameId);
-                u.getGamesCollection().add(g);
+                Game g = extractGameForId(gameId);
+                if (g != null) u.getGamesCollection().add(g);
                 EventBus.getDefault().post(new GameFetchedEvent(g));
             }
 
@@ -46,7 +58,7 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
 
     @Override
     protected void onProgressUpdate(User... users) {
-        EventBus.getDefault().post(new UserFetchEvent(true, users[0]));
+        EventBus.getDefault().post(new UserFetchEvent(true, users[0], this.users.size()));
     }
 
     @Override

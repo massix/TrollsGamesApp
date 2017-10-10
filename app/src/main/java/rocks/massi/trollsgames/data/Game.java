@@ -25,4 +25,11 @@ public class Game implements Comparable<Game>, Serializable {
     public int compareTo(Game o) {
         return name.compareTo(o.getName());
     }
+
+    public String getNormalizedThumbnail() {
+        if (thumbnail.startsWith("//"))
+            return "https:" + thumbnail;
+
+        return thumbnail;
+    }
 }
