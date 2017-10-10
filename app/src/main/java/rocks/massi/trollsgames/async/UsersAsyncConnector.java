@@ -1,12 +1,14 @@
 package rocks.massi.trollsgames.async;
 
 import android.os.AsyncTask;
-import android.util.Pair;
 import feign.Feign;
 import feign.gson.GsonDecoder;
 import org.greenrobot.eventbus.EventBus;
 import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.data.User;
+import rocks.massi.trollsgames.events.GameFetchedEvent;
+import rocks.massi.trollsgames.events.UserFetchEvent;
+import rocks.massi.trollsgames.events.UsersFetchedEvent;
 import rocks.massi.trollsgames.services.TrollsServer;
 
 import java.util.LinkedList;
@@ -28,11 +30,12 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
         for (User u : users) {
             u.buildCollection();
             u.setGamesCollection(new LinkedList<Game>());
-            EventBus.getDefault().post(new Pair<>(false, u));
+            EventBus.getDefault().post(new UserFetchEvent(false, u));
 
             for (Integer gameId : u.getCollection()) {
                 Game g = connector.getGame(gameId);
                 u.getGamesCollection().add(g);
+                EventBus.getDefault().post(new GameFetchedEvent(g));
             }
 
             publishProgress(u);
@@ -43,7 +46,7 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
 
     @Override
     protected void onProgressUpdate(User... users) {
-        EventBus.getDefault().post(new Pair<>(true, users[0]));
+        EventBus.getDefault().post(new UserFetchEvent(true, users[0]));
     }
 
     @Override
@@ -52,6 +55,6 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
 
     @Override
     protected void onPostExecute(List<User> users) {
-        EventBus.getDefault().post(users);
+        EventBus.getDefault().post(new UsersFetchedEvent(users));
     }
 }

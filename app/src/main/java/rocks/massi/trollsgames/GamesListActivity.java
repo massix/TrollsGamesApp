@@ -1,19 +1,18 @@
 package rocks.massi.trollsgames;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -23,12 +22,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.w3c.dom.Text;
+import org.greenrobot.eventbus.ThreadMode;
 import rocks.massi.trollsgames.adapter.GamesAdapter;
+import rocks.massi.trollsgames.async.UsersAsyncConnector;
 import rocks.massi.trollsgames.constants.Extra;
 import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.data.User;
-import rocks.massi.trollsgames.async.UsersAsyncConnector;
+import rocks.massi.trollsgames.events.GameFetchedEvent;
+import rocks.massi.trollsgames.events.GameSelectedEvent;
+import rocks.massi.trollsgames.events.UserFetchEvent;
+import rocks.massi.trollsgames.events.UsersFetchedEvent;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -42,6 +45,7 @@ public class GamesListActivity extends AppCompatActivity
     private boolean operationPending;
 
     private ProgressBar loadingUsersPb;
+    private ProgressBar loadingGamePb;
     private TextView loadingUsersTv;
 
     @Override
@@ -56,11 +60,9 @@ public class GamesListActivity extends AppCompatActivity
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe
-    protected void onFinishEvent(List<User> users) {
-        Snackbar.make(findViewById(R.id.fab), "Finished", Snackbar.LENGTH_SHORT).show();
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    protected void onFinishEvent(final UsersFetchedEvent usersFetchedEvent) {
         findViewById(R.id.fab).setEnabled(true);
-        ((FloatingActionButton) findViewById(R.id.fab)).show();
         operationPending = false;
 
         loadingUsersPb.setIndeterminate(false);
@@ -68,35 +70,36 @@ public class GamesListActivity extends AppCompatActivity
         loadingUsersPb.setProgress(100, true);
 
         loadingUsersPb.setVisibility(View.INVISIBLE);
+        loadingGamePb.setVisibility(View.INVISIBLE);
         loadingUsersTv.setText("C'est fini ! Vous pouvez maintenant cliquer sur un utilisateur dans le menu de gauche !");
     }
 
-    @Subscribe
-    protected void onUserEvent(final Pair<Boolean, User> progress) {
-        if (progress.first) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    protected void onUserEvent(final UserFetchEvent userFetchEvent) {
+        if (userFetchEvent.isFinished()) {
             SubMenu menu = ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(0).getSubMenu();
-            menu.add(Menu.NONE, cachedUsers.size(), cachedUsers.size(), progress.second.getForumNick());
-            cachedUsers.add(progress.second);
+            menu.add(Menu.NONE, cachedUsers.size(), cachedUsers.size(), userFetchEvent.getUser().getForumNick());
+            cachedUsers.add(userFetchEvent.getUser());
         }
 
         else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loadingUsersTv.setText(Html.fromHtml(String.format("Je télécharge les informations pour l'utilisateur <b>%s</b>",
-                            progress.second.getForumNick()),
-                            Html.FROM_HTML_MODE_COMPACT));
-                }
-            });
-
-            Snackbar.make(findViewById(R.id.fab), "Fetching user " + progress.second.getForumNick(), Snackbar.LENGTH_INDEFINITE).show();
+            loadingUsersTv.setText(Html.fromHtml(String.format("Je télécharge les informations pour l'utilisateur <b>%s</b>",
+                userFetchEvent.getUser().getForumNick()),
+                Html.FROM_HTML_MODE_COMPACT));
+            loadingGamePb.setMax(userFetchEvent.getUser().getCollection().size());
+            loadingGamePb.setProgress(0);
         }
     }
 
-    @Subscribe
-    protected void onGameSelectedEvent(Game game) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    protected void onGameFetchedEvent(final GameFetchedEvent gameFetchedEvent) {
+        loadingGamePb.setProgress(loadingGamePb.getProgress() + 1);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    protected void onGameSelectedEvent(final GameSelectedEvent gameSelectedEvent) {
         Intent i = new Intent(this, GameDisplayActivity.class);
-        i.putExtra(Extra.POSTED_GAME, game);
+        i.putExtra(Extra.POSTED_GAME, gameSelectedEvent.getGame());
         startActivity(i);
     }
 
@@ -112,9 +115,14 @@ public class GamesListActivity extends AppCompatActivity
 
         loadingUsersTv = (TextView) findViewById(R.id.loadingUserInfo);
         loadingUsersPb = (ProgressBar) findViewById(R.id.loadingUsersBar);
+        loadingGamePb = (ProgressBar) findViewById(R.id.gamesLoadingBar);
 
+        loadingGamePb.setVisibility(View.INVISIBLE);
         loadingUsersPb.setVisibility(View.INVISIBLE);
-        loadingUsersTv.setVisibility(View.INVISIBLE);
+        loadingUsersTv.setTypeface(Typeface.createFromAsset(getAssets(), "font/Raleway-Regular.ttf"));
+
+        loadingUsersTv.setText("Veuillez cliquer sur le petit bouton en bas à droite pour " +
+                "télécharger les informations des utilisateurs !");
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +130,6 @@ public class GamesListActivity extends AppCompatActivity
             public void onClick(View view) {
                 FloatingActionButton f = (FloatingActionButton) findViewById(R.id.fab);
                 f.setEnabled(false);
-                f.hide();
 
                 // Refresh Submenu
                 ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(0).getSubMenu().clear();
@@ -132,7 +139,14 @@ public class GamesListActivity extends AppCompatActivity
                 new UsersAsyncConnector().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 loadingUsersPb.setVisibility(View.VISIBLE);
                 loadingUsersTv.setVisibility(View.VISIBLE);
+                loadingGamePb.setVisibility(View.VISIBLE);
+                loadingGamePb.setIndeterminate(false);
+                loadingGamePb.setMax(0);
                 loadingUsersTv.setText("Je télécharge les informations des utilisateurs...");
+
+                getSupportActionBar().setTitle(R.string.app_name);
+                getSupportActionBar().setSubtitle("");
+
                 operationPending = true;
             }
         });
@@ -186,7 +200,12 @@ public class GamesListActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if (operationPending) return false;
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        if (operationPending) {
+            drawer.closeDrawer(GravityCompat.START);
+            return false;
+        }
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -208,7 +227,6 @@ public class GamesListActivity extends AppCompatActivity
         tb.setTitle(user.getForumNick());
         tb.setSubtitle(user.getCollection().size() + " jeux possédés");
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

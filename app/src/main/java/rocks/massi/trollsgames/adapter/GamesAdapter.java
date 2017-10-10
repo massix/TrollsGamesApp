@@ -16,6 +16,7 @@ import rocks.massi.trollsgames.R;
 import rocks.massi.trollsgames.async.BGGImagesConnector;
 import rocks.massi.trollsgames.cache.ImagesCache;
 import rocks.massi.trollsgames.data.Game;
+import rocks.massi.trollsgames.events.GameSelectedEvent;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class GamesAdapter extends ArrayAdapter<Game> {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(g);
+                EventBus.getDefault().post(new GameSelectedEvent(g));
             }
         });
 
