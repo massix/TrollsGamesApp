@@ -37,19 +37,11 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
     @Override
     protected List<User> doInBackground(Void... voids) {
         users = connector.getUsers();
-        games = connector.getGames();
 
         for (User u : users) {
             u.buildCollection();
-            u.setGamesCollection(new LinkedList<Game>());
+            u.setGamesCollection(connector.getCollectionForUser(u.getForumNick()));
             EventBus.getDefault().post(new UserFetchEvent(false, u, users.size()));
-
-            for (Integer gameId : u.getCollection()) {
-                Game g = extractGameForId(gameId);
-                if (g != null) u.getGamesCollection().add(g);
-                EventBus.getDefault().post(new GameFetchedEvent(g));
-            }
-
             publishProgress(u);
         }
 
