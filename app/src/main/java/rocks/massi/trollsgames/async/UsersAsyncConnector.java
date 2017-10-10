@@ -6,12 +6,10 @@ import feign.gson.GsonDecoder;
 import org.greenrobot.eventbus.EventBus;
 import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.data.User;
-import rocks.massi.trollsgames.events.GameFetchedEvent;
 import rocks.massi.trollsgames.events.UserFetchEvent;
 import rocks.massi.trollsgames.events.UsersFetchedEvent;
 import rocks.massi.trollsgames.services.TrollsServer;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
