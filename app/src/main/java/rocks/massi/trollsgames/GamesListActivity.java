@@ -59,7 +59,7 @@ public class GamesListActivity extends AppCompatActivity
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    protected void onFinishEvent(final UsersFetchedEvent usersFetchedEvent) {
+    public void onFinishEvent(final UsersFetchedEvent usersFetchedEvent) {
         findViewById(R.id.fab).setEnabled(true);
         operationPending = false;
 
@@ -69,7 +69,7 @@ public class GamesListActivity extends AppCompatActivity
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 100)
-    protected void onUserEvent(final UserFetchEvent userFetchEvent) {
+    public void onUserEvent(final UserFetchEvent userFetchEvent) {
         if (userFetchEvent.isFinished()) {
             SubMenu menu = ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(0).getSubMenu();
             menu.add(Menu.NONE, users.size(), users.size(), userFetchEvent.getUser().getForumNick());
@@ -83,7 +83,7 @@ public class GamesListActivity extends AppCompatActivity
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    protected void onGameSelectedEvent(final GameSelectedEvent gameSelectedEvent) {
+    public void onGameSelectedEvent(final GameSelectedEvent gameSelectedEvent) {
         Intent i = new Intent(this, GameDisplayActivity.class);
         i.putExtra(Extra.POSTED_GAME, gameSelectedEvent.getGame());
         startActivity(i);
