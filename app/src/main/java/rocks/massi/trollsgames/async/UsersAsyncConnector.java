@@ -1,11 +1,14 @@
 package rocks.massi.trollsgames.async;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import feign.Feign;
+import feign.RetryableException;
 import feign.gson.GsonDecoder;
 import org.greenrobot.eventbus.EventBus;
 import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.data.User;
+import rocks.massi.trollsgames.events.MissingConnectionEvent;
 import rocks.massi.trollsgames.events.UserFetchEvent;
 import rocks.massi.trollsgames.events.UsersFetchedEvent;
 import rocks.massi.trollsgames.services.TrollsServer;
@@ -34,16 +37,24 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
 
     @Override
     protected List<User> doInBackground(Void... voids) {
-        users = connector.getUsers();
+        try {
+            users = connector.getUsers();
 
-        for (User u : users) {
-            u.buildCollection();
-            u.setGamesCollection(connector.getCollectionForUser(u.getForumNick()));
-            EventBus.getDefault().post(new UserFetchEvent(false, u, users.size()));
-            publishProgress(u);
+            for (User u : users) {
+                u.buildCollection();
+                u.setGamesCollection(connector.getCollectionForUser(u.getForumNick()));
+                EventBus.getDefault().post(new UserFetchEvent(false, u, users.size()));
+                publishProgress(u);
+            }
+
+            return users;
+
+        } catch (RetryableException e) {
+            Log.e("UsersAsyncConnector", "caught exception");
+            EventBus.getDefault().post(new MissingConnectionEvent(e));
         }
 
-        return users;
+        return null;
     }
 
     @Override
@@ -57,6 +68,7 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
 
     @Override
     protected void onPostExecute(List<User> users) {
-        EventBus.getDefault().post(new UsersFetchedEvent(users));
+        if (users != null)
+            EventBus.getDefault().post(new UsersFetchedEvent(users));
     }
 }

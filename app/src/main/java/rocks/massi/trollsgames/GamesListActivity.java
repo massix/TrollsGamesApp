@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import feign.RetryableException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -29,6 +30,7 @@ import rocks.massi.trollsgames.constants.Extra;
 import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.data.User;
 import rocks.massi.trollsgames.events.GameSelectedEvent;
+import rocks.massi.trollsgames.events.MissingConnectionEvent;
 import rocks.massi.trollsgames.events.UserFetchEvent;
 import rocks.massi.trollsgames.events.UsersFetchedEvent;
 
@@ -90,6 +92,15 @@ public class GamesListActivity extends AppCompatActivity
         Intent i = new Intent(this, GameDisplayActivity.class);
         i.putExtra(Extra.POSTED_GAME, gameSelectedEvent.getGame());
         startActivity(i);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNetworkErrorEvent(final MissingConnectionEvent event) {
+        loadingUsersTv.setText("Je crois que vous n'êtes pas connectés sur Internet. " +
+        "Veuillez essayer ulterieurement dans quelque minutes.");
+        loadingUsersPb.setVisibility(View.INVISIBLE);
+        findViewById(R.id.fab).setEnabled(true);
+        operationPending = false;
     }
 
     @Override
