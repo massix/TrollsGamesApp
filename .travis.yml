@@ -13,8 +13,10 @@ android:
 
 before_script:
   - cp $TRAVIS_BUILD_DIR/.keystore $HOME
+  - cp app/gradle.properties $HOME
+  - sed -i "s/SED_ME/$storepass/g" $HOME/gradle.properties
 
-script: ./gradlew build check
+script: ./gradlew build check assembleRelease
 
 before_deploy:
 - cp $TRAVIS_BUILD_DIR/.keystore $HOME
