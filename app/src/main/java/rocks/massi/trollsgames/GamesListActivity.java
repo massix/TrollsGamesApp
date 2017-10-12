@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -31,6 +32,8 @@ import rocks.massi.trollsgames.events.GameSelectedEvent;
 import rocks.massi.trollsgames.events.UserFetchEvent;
 import rocks.massi.trollsgames.events.UsersFetchedEvent;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,7 +43,7 @@ public class GamesListActivity extends AppCompatActivity
     private List<User> users;
     private List<Game> shownGames;
 
-    private GamesAdapter gamesAdapterAdapter;
+    private GamesAdapter gamesAdapter;
     private boolean operationPending;
 
     private ProgressBar loadingUsersPb;
@@ -117,7 +120,7 @@ public class GamesListActivity extends AppCompatActivity
                 ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(0).getSubMenu().clear();
                 users.clear();
                 shownGames.clear();
-                gamesAdapterAdapter.notifyDataSetChanged();
+                gamesAdapter.notifyDataSetChanged();
 
                 new UsersAsyncConnector().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -144,8 +147,8 @@ public class GamesListActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         ListView lv = findViewById(R.id.gameslist);
-        gamesAdapterAdapter = new GamesAdapter(getApplicationContext(), 0, shownGames);
-        lv.setAdapter(gamesAdapterAdapter);
+        gamesAdapter = new GamesAdapter(getApplicationContext(), 0, shownGames);
+        lv.setAdapter(gamesAdapter);
     }
 
     @Override
@@ -167,16 +170,39 @@ public class GamesListActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        ListView lv = findViewById(R.id.gameslist);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.sort_alpha && !shownGames.isEmpty()) {
+            Log.i("GamesListActivity", "Alphabetical order");
+            Collections.sort(shownGames, new Comparator<Game>() {
+                @Override
+                public int compare(Game o1, Game o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
         }
 
+        else if (id == R.id.sort_rank && !shownGames.isEmpty()) {
+            Log.i("GamesListActivity", "Rank order");
+            Collections.sort(shownGames, new Comparator<Game>() {
+                @Override
+                public int compare(Game o1, Game o2) {
+
+                    // Force the ranks 0 on bottom of the list.
+                    if (o1.getRank() <= 0 && o2.getRank() > 0)
+                        return 1;
+                    else if (o2.getRank() <= 0 && o1.getRank() > 0)
+                        return -1;
+
+                    // Classical result I guess ?
+                    return o1.getRank() - o2.getRank();
+                }
+            });
+        }
+
+        gamesAdapter.notifyDataSetChanged();
+        lv.setSelectionAfterHeaderView();
         return super.onOptionsItemSelected(item);
     }
 
@@ -204,7 +230,7 @@ public class GamesListActivity extends AppCompatActivity
         ListView lv = findViewById(R.id.gameslist);
         loadingUsersTv.setVisibility(View.INVISIBLE);
 
-        gamesAdapterAdapter.notifyDataSetChanged();
+        gamesAdapter.notifyDataSetChanged();
         lv.setSelectionAfterHeaderView();
 
         getSupportActionBar().setTitle(user.getForumNick());
