@@ -1,17 +1,7 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
-
-    signingConfigs {
-        release {
-            storeFile file(TG_RELEASE_STORE_FILE)
-            storePassword TG_RELEASE_STORE_PASSWORD
-            keyAlias TG_RELEASE_KEY_ALIAS
-            keyPassword TG_RELEASE_KEY_PASSWORD
-        }
-    }
 
     defaultConfig {
         applicationId "rocks.massi.trollsgames"
@@ -26,10 +16,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
 }
+
 
 repositories {
     mavenCentral()
