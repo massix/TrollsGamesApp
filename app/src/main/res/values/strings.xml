@@ -45,4 +45,8 @@
         &lt;p>Il occupe la place n. &lt;b>%4$d&lt;/b> sur &lt;i>BoardGameGeek&lt;/i>&lt;/p>
     </string>
 
+    <string name="game_random" translatable="true">
+        Jeu aléatoire
+    </string>
+
 </resources>

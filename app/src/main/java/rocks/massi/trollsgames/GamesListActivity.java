@@ -34,10 +34,7 @@ import rocks.massi.trollsgames.events.MissingConnectionEvent;
 import rocks.massi.trollsgames.events.UserFetchEvent;
 import rocks.massi.trollsgames.events.UsersFetchedEvent;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class GamesListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -209,6 +206,11 @@ public class GamesListActivity extends AppCompatActivity
                     return o1.getRank() - o2.getRank();
                 }
             });
+        }
+
+        else if (id == R.id.game_random && !shownGames.isEmpty()) {
+            EventBus.getDefault().post(new GameSelectedEvent(
+                    shownGames.get(new Random().nextInt(shownGames.size()))));
         }
 
         gamesAdapter.notifyDataSetChanged();

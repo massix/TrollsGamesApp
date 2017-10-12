@@ -11,4 +11,9 @@
           android:title="@string/sort_bgg"
           android:orderInCategory="101"
           app:showAsAction="never"/>
+
+    <item android:id="@+id/game_random"
+          android:title="@string/game_random"
+          android:orderInCategory="102"
+          app:showAsAction="never"/>
 </menu>
