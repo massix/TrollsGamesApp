@@ -49,4 +49,8 @@
         Jeu aléatoire
     </string>
 
+    <string name="open_bgg" translatable="true">
+        BGG
+    </string>
+
 </resources>
