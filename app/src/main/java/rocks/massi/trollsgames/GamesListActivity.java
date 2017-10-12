@@ -44,6 +44,7 @@ public class GamesListActivity extends AppCompatActivity
 
     private List<User> users;
     private List<Game> shownGames;
+    private User activeUser;
 
     private GamesAdapter gamesAdapter;
     private boolean operationPending;
@@ -70,7 +71,7 @@ public class GamesListActivity extends AppCompatActivity
 
         loadingUsersPb.setVisibility(View.INVISIBLE);
 
-        loadingUsersTv.setText("C'est fini ! Vous pouvez maintenant cliquer sur un utilisateur dans le menu de gauche !");
+        loadingUsersTv.setText(R.string.loading_end);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 100)
@@ -96,8 +97,7 @@ public class GamesListActivity extends AppCompatActivity
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNetworkErrorEvent(final MissingConnectionEvent event) {
-        loadingUsersTv.setText("Je crois que vous n'êtes pas connectés sur Internet. " +
-        "Veuillez essayer ulterieurement dans quelque minutes.");
+        loadingUsersTv.setText(R.string.missing_network);
         loadingUsersPb.setVisibility(View.INVISIBLE);
         findViewById(R.id.fab).setEnabled(true);
         operationPending = false;
@@ -117,8 +117,7 @@ public class GamesListActivity extends AppCompatActivity
         loadingUsersPb = findViewById(R.id.gamesLoadingBar);
         loadingUsersTv.setTypeface(Typeface.createFromAsset(getAssets(), "font/Raleway-Regular.ttf"));
 
-        loadingUsersTv.setText("Veuillez cliquer sur le petit bouton en bas à droite pour " +
-                "télécharger les informations des utilisateurs !");
+        loadingUsersTv.setText(R.string.intro);
 
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +138,7 @@ public class GamesListActivity extends AppCompatActivity
                 loadingUsersPb.setProgress(0, true);
                 loadingUsersTv.setVisibility(View.VISIBLE);
 
-                loadingUsersTv.setText("Je télécharge les informations des utilisateurs...");
+                loadingUsersTv.setText(R.string.loading_users);
 
                 getSupportActionBar().setTitle(R.string.app_name);
                 getSupportActionBar().setSubtitle("");
@@ -229,11 +228,11 @@ public class GamesListActivity extends AppCompatActivity
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        User user = users.get(id);
+        activeUser = users.get(id);
 
         shownGames.clear();
 
-        for (Game g : user.getGamesCollection()) {
+        for (Game g : activeUser.getGamesCollection()) {
             if (! g.isExtension() && ! shownGames.contains(g))
                 shownGames.add(g);
         }
@@ -244,8 +243,8 @@ public class GamesListActivity extends AppCompatActivity
         gamesAdapter.notifyDataSetChanged();
         lv.setSelectionAfterHeaderView();
 
-        getSupportActionBar().setTitle(user.getForumNick());
-        getSupportActionBar().setSubtitle(user.getCollection().size() + " jeux possédés");
+        getSupportActionBar().setTitle(activeUser.getForumNick());
+        getSupportActionBar().setSubtitle(getResources().getString(R.string.user_game_count, shownGames.size()));
 
         drawer.closeDrawer(GravityCompat.START);
         return true;

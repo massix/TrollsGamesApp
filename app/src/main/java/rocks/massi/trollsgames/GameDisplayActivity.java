@@ -24,8 +24,7 @@ public class GameDisplayActivity extends AppCompatActivity {
         Game g = (Game) getIntent().getSerializableExtra(Extra.POSTED_GAME);
         setTitle(g.getName());
 
-        getSupportActionBar().setSubtitle(String.format(Locale.FRANCE,
-                "Pour %d%s joueurs.",
+        getSupportActionBar().setSubtitle(getResources().getString(R.string.players_count,
                 g.getMinPlayers(),
                 g.getMaxPlayers() > g.getMinPlayers() ?
                         String.format(Locale.FRANCE, " à %d", g.getMaxPlayers()) : ""));
@@ -38,13 +37,13 @@ public class GameDisplayActivity extends AppCompatActivity {
                 .fitCenter()
                 .into(iv);
 
-        TextView gameDescription = (TextView) findViewById(R.id.gameDisplayDescription);
+        TextView gameDescription = findViewById(R.id.gameDisplayDescription);
         gameDescription.setText(Html.fromHtml(g.getDescription(), Html.FROM_HTML_MODE_COMPACT));
         gameDescription.setMovementMethod(new ScrollingMovementMethod());
         gameDescription.setTypeface(Typeface.createFromAsset(getAssets(), "font/Raleway-Regular.ttf"));
 
-        TextView gameInformation = (TextView) findViewById(R.id.gameDisplayInfo);
-        gameInformation.setText(Html.fromHtml(formatGameInformation(g), Html.FROM_HTML_MODE_COMPACT));
+        TextView gameInformation = findViewById(R.id.gameDisplayInfo);
+        gameInformation.setText(formatGameInformation(g));
         gameInformation.setTypeface(Typeface.createFromAsset(getAssets(), "font/Montserrat-Regular.ttf"));
     }
 
@@ -59,15 +58,11 @@ public class GameDisplayActivity extends AppCompatActivity {
         return false;
     }
 
-    private String formatGameInformation(Game g) {
-        return String.format(Locale.FRANCE,
-                "<p>Créé par <b>%s</b></p>" +
-                        "<p>Pour une durée de <b>%d</b> minutes</p>" +
-                        "<p>Publié en <b>%d</b>" +
-                        "<p>Il occupe la place n. <b>%d</b> sur BoardGameGeek</p>",
+    private CharSequence formatGameInformation(Game g) {
+        return Html.fromHtml(getResources().getString(R.string.game_information,
                 g.getAuthors(),
                 g.getPlayingTime(),
                 g.getYearPublished(),
-                g.getRank());
+                g.getRank()), Html.FROM_HTML_MODE_COMPACT);
     }
 }
