@@ -7,7 +7,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.*;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -24,7 +26,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -56,13 +57,13 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
     private SensorManager sensorManager;
 
     private class SensorHandling {
-        public float lastAcceleration;
-        public float currentAcceleration;
-        public float acceleration;
-        public long lastDetectedEvent;
-    };
+        float lastAcceleration;
+        float currentAcceleration;
+        float acceleration;
+        long lastDetectedEvent;
+    }
 
-    SensorHandling sensorHandling;
+    private SensorHandling sensorHandling;
 
     @Override
     public void onSensorChanged(SensorEvent event) {
