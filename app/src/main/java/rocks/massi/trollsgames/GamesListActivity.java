@@ -1,9 +1,13 @@
 package rocks.massi.trollsgames;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
-import android.os.Bundle;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.*;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -20,6 +24,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -35,8 +40,7 @@ import rocks.massi.trollsgames.events.UsersFetchedEvent;
 
 import java.util.*;
 
-public class GamesListActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class GamesListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
 
     private List<User> users;
     private List<Game> shownGames;
@@ -49,6 +53,48 @@ public class GamesListActivity extends AppCompatActivity
     private TextView loadingUsersTv;
 
     private boolean expansionsHidden;
+    private SensorManager sensorManager;
+
+    private class SensorHandling {
+        public float lastAcceleration;
+        public float currentAcceleration;
+        public float acceleration;
+        public long lastDetectedEvent;
+    };
+
+    SensorHandling sensorHandling;
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        // Shake event should select a random game if list is not empty
+        Toast.makeText(getApplicationContext(), "Sensor change event", Toast.LENGTH_SHORT);
+
+        float x = event.values[0];
+        float y = event.values[1];
+        float z = event.values[2];
+
+        sensorHandling.lastAcceleration = sensorHandling.currentAcceleration;
+        sensorHandling.currentAcceleration = (float) Math.sqrt((double) (x*x + y*y + z*z));
+        float delta = sensorHandling.currentAcceleration - sensorHandling.lastAcceleration;
+        sensorHandling.acceleration = 0.09f + delta;
+        long time = new Date().getTime();
+
+        // 2s delay for events.
+        if (sensorHandling.acceleration > 12.0f && !shownGames.isEmpty() &&
+                (time - sensorHandling.lastDetectedEvent) >= 2000) {
+            Log.i("SensorHandling", "Detected shake event");
+            sensorHandling.lastDetectedEvent = time;
+            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            vibrator.vibrate(300);
+            EventBus.getDefault().post(new GameSelectedEvent(
+                    shownGames.get(new Random().nextInt(shownGames.size()))));
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 
     private enum CurrentRanking {
         ALPHABETICAL,
@@ -61,12 +107,23 @@ public class GamesListActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensorManager.registerListener(this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
+
+        sensorHandling = new SensorHandling();
+        sensorHandling.currentAcceleration = SensorManager.GRAVITY_EARTH;
+        sensorHandling.lastAcceleration = SensorManager.GRAVITY_EARTH;
+        sensorHandling.acceleration = 0.00f;
+        sensorHandling.lastDetectedEvent = new Date().getTime();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+        sensorManager.unregisterListener(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
