@@ -66,9 +66,6 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        // Shake event should select a random game if list is not empty
-        Toast.makeText(getApplicationContext(), "Sensor change event", Toast.LENGTH_SHORT);
-
         float x = event.values[0];
         float y = event.values[1];
         float z = event.values[2];
