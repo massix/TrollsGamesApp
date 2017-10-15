@@ -194,13 +194,13 @@ public class GamesListActivity extends AppCompatActivity
         if (id == R.id.sort_alpha && !shownGames.isEmpty()) {
             Log.i("GamesListActivity", "Alphabetical order");
             currentRanking = CurrentRanking.ALPHABETICAL;
-            rebuildGameList();
+            rebuildShownGamesList();
         }
 
         else if (id == R.id.sort_rank && !shownGames.isEmpty()) {
             Log.i("GamesListActivity", "Rank order");
             currentRanking = CurrentRanking.BGG_RANKING;
-            rebuildGameList();
+            rebuildShownGamesList();
         }
 
         else if (id == R.id.game_random && !shownGames.isEmpty()) {
@@ -219,7 +219,7 @@ public class GamesListActivity extends AppCompatActivity
                 item.setTitle(R.string.show_expansions);
             }
 
-            rebuildGameList();
+            rebuildShownGamesList();
         }
 
         gamesAdapter.notifyDataSetChanged();
@@ -227,7 +227,6 @@ public class GamesListActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -241,7 +240,7 @@ public class GamesListActivity extends AppCompatActivity
         int id = item.getItemId();
         activeUser = users.get(id);
 
-        rebuildGameList();
+        rebuildShownGamesList();
 
         ListView lv = findViewById(R.id.gameslist);
         loadingUsersTv.setVisibility(View.INVISIBLE);
@@ -255,7 +254,7 @@ public class GamesListActivity extends AppCompatActivity
         return true;
     }
 
-    private void rebuildGameList() {
+    private void rebuildShownGamesList() {
         // Build games list
         shownGames.clear();
 
