@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import feign.RetryableException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -48,6 +47,15 @@ public class GamesListActivity extends AppCompatActivity
 
     private ProgressBar loadingUsersPb;
     private TextView loadingUsersTv;
+
+    private boolean expansionsHidden;
+
+    private enum CurrentRanking {
+        ALPHABETICAL,
+        BGG_RANKING
+    }
+
+    private CurrentRanking currentRanking;
 
     @Override
     protected void onStart() {
@@ -106,6 +114,9 @@ public class GamesListActivity extends AppCompatActivity
         setContentView(R.layout.activity_games_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        expansionsHidden = true;
+        currentRanking = CurrentRanking.ALPHABETICAL;
 
         users = new LinkedList<>();
         shownGames = new LinkedList<>();
@@ -182,35 +193,33 @@ public class GamesListActivity extends AppCompatActivity
 
         if (id == R.id.sort_alpha && !shownGames.isEmpty()) {
             Log.i("GamesListActivity", "Alphabetical order");
-            Collections.sort(shownGames, new Comparator<Game>() {
-                @Override
-                public int compare(Game o1, Game o2) {
-                    return o1.getName().compareTo(o2.getName());
-                }
-            });
+            currentRanking = CurrentRanking.ALPHABETICAL;
+            rebuildGameList();
         }
 
         else if (id == R.id.sort_rank && !shownGames.isEmpty()) {
             Log.i("GamesListActivity", "Rank order");
-            Collections.sort(shownGames, new Comparator<Game>() {
-                @Override
-                public int compare(Game o1, Game o2) {
-
-                    // Force the ranks 0 on bottom of the list.
-                    if (o1.getRank() <= 0 && o2.getRank() > 0)
-                        return 1;
-                    else if (o2.getRank() <= 0 && o1.getRank() > 0)
-                        return -1;
-
-                    // Classical result I guess ?
-                    return o1.getRank() - o2.getRank();
-                }
-            });
+            currentRanking = CurrentRanking.BGG_RANKING;
+            rebuildGameList();
         }
 
         else if (id == R.id.game_random && !shownGames.isEmpty()) {
             EventBus.getDefault().post(new GameSelectedEvent(
                     shownGames.get(new Random().nextInt(shownGames.size()))));
+        }
+
+        else if (id == R.id.expansions_toggle && !shownGames.isEmpty()) {
+            Log.i("GamesListActivity", "Toggle expansions");
+            if (expansionsHidden) {
+                expansionsHidden = false;
+                item.setTitle(R.string.hide_expansions);
+            }
+            else {
+                expansionsHidden = true;
+                item.setTitle(R.string.show_expansions);
+            }
+
+            rebuildGameList();
         }
 
         gamesAdapter.notifyDataSetChanged();
@@ -232,12 +241,7 @@ public class GamesListActivity extends AppCompatActivity
         int id = item.getItemId();
         activeUser = users.get(id);
 
-        shownGames.clear();
-
-        for (Game g : activeUser.getGamesCollection()) {
-            if (! g.isExtension() && ! shownGames.contains(g))
-                shownGames.add(g);
-        }
+        rebuildGameList();
 
         ListView lv = findViewById(R.id.gameslist);
         loadingUsersTv.setVisibility(View.INVISIBLE);
@@ -246,9 +250,53 @@ public class GamesListActivity extends AppCompatActivity
         lv.setSelectionAfterHeaderView();
 
         getSupportActionBar().setTitle(activeUser.getForumNick());
-        getSupportActionBar().setSubtitle(getResources().getString(R.string.user_game_count, shownGames.size()));
-
         drawer.closeDrawer(GravityCompat.START);
+
         return true;
+    }
+
+    private void rebuildGameList() {
+        // Build games list
+        shownGames.clear();
+
+        for (Game g : activeUser.getGamesCollection()) {
+
+            if (g.isExtension()) {
+                if (! expansionsHidden && ! shownGames.contains(g))
+                    shownGames.add(g);
+            }
+
+            else if (! shownGames.contains(g))
+                shownGames.add(g);
+        }
+
+        switch (currentRanking) {
+            case BGG_RANKING:
+                Collections.sort(shownGames, new Comparator<Game>() {
+                    @Override
+                    public int compare(Game o1, Game o2) {
+
+                        // Force the ranks 0 on bottom of the list.
+                        if (o1.getRank() <= 0 && o2.getRank() > 0)
+                            return 1;
+                        else if (o2.getRank() <= 0 && o1.getRank() > 0)
+                            return -1;
+
+                        // Classical result I guess ?
+                        return o1.getRank() - o2.getRank();
+                    }
+                });
+                break;
+            case ALPHABETICAL:
+                Collections.sort(shownGames, new Comparator<Game>() {
+                    @Override
+                    public int compare(Game o1, Game o2) {
+                        return o1.getName().compareTo(o2.getName());
+                    }
+                });
+                break;
+        }
+
+        getSupportActionBar().setSubtitle(getResources().getString(R.string.user_game_count, shownGames.size()));
     }
 }

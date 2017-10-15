@@ -53,4 +53,12 @@
         BGG
     </string>
 
+    <string name="show_expansions" translatable="true">
+        Montrer les expansions
+    </string>
+
+    <string name="hide_expansions" translatable="true">
+        Cacher les expansions
+    </string>
+
 </resources>

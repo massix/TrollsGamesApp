@@ -2,18 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/expansions_toggle"
+          android:title="@string/show_expansions"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
+
     <item android:id="@+id/sort_alpha"
           android:title="@string/sort_alpha"
-          android:orderInCategory="100"
+          android:orderInCategory="101"
           app:showAsAction="never"/>
 
     <item android:id="@+id/sort_rank"
           android:title="@string/sort_bgg"
-          android:orderInCategory="101"
+          android:orderInCategory="102"
           app:showAsAction="never"/>
 
     <item android:id="@+id/game_random"
           android:title="@string/game_random"
-          android:orderInCategory="102"
+          android:orderInCategory="103"
           app:showAsAction="never"/>
 </menu>
