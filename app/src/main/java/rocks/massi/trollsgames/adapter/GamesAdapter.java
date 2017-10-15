@@ -1,6 +1,7 @@
 package rocks.massi.trollsgames.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,13 +33,22 @@ public class GamesAdapter extends ArrayAdapter<Game> {
         }
 
         TextView tv = convertView.findViewById(R.id.gameName);
-        tv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "font/Montserrat-Regular.ttf"));
+        tv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "font/Raleway-Regular.ttf"));
         tv.setText(g.getName());
+
+        if (g.isExtension()) {
+            tv.setTextColor(getContext().getResources().getColor(R.color.gameExpansion, getContext().getTheme()));
+        }
+        else {
+            tv.setTextColor(getContext().getResources().getColor(R.color.gameDefault, getContext().getTheme()));
+        }
+
         ImageView iv = convertView.findViewById(R.id.gameImage);
-        GlideApp.with(convertView)
+
+        GlideApp.with(iv)
                 .load(g.getNormalizedThumbnail())
                 .placeholder(R.drawable.ic_search_black_24dp)
-                .fitCenter()
+                .circleCrop()
                 .into(iv);
 
         convertView.setOnClickListener(new View.OnClickListener() {
