@@ -237,6 +237,11 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.games_list, menu);
+
+        TextView navHeaderTv = findViewById(R.id.nav_header_tv);
+        navHeaderTv.setTypeface(Typeface.createFromAsset(getAssets(), "font/IndieFlower.ttf"));
+        navHeaderTv.setTextColor(getColor(R.color.gameDefault));
+
         return true;
     }
 
