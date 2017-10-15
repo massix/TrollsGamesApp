@@ -243,6 +243,11 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         navHeaderTv.setTypeface(Typeface.createFromAsset(getAssets(), "font/IndieFlower.ttf"));
         navHeaderTv.setTextColor(getColor(R.color.gameDefault));
 
+        TextView navVersionTv = findViewById(R.id.nav_version_nb);
+        navVersionTv.setText(getString(R.string.version_number, BuildConfig.VERSION_NAME));
+        navVersionTv.setTypeface(Typeface.createFromAsset(getAssets(), "font/IndieFlower.ttf"));
+        navVersionTv.setTextColor(getColor(R.color.gameDefault));
+
         return true;
     }
 

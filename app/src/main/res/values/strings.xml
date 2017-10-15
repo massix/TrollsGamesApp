@@ -61,4 +61,8 @@
         Cacher les expansions
     </string>
 
+    <string name="version_number" translatable="true">
+        Version %1$s
+    </string>
+
 </resources>
