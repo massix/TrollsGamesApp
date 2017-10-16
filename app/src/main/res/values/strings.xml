@@ -65,4 +65,8 @@
         Version %1$s
     </string>
 
+    <string name="philibert_header" translatable="true">
+        Voici ce que j\'ai trouvé sur Internet
+    </string>
+
 </resources>

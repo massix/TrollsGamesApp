@@ -10,20 +10,89 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import feign.Feign;
+import feign.gson.GsonDecoder;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.w3c.dom.Text;
+import rocks.massi.trollsgames.adapter.GamesAdapter;
+import rocks.massi.trollsgames.adapter.GamesServicesAdapter;
+import rocks.massi.trollsgames.async.PhilibertAsyncConnector;
+import rocks.massi.trollsgames.async.TricTracAsyncConnector;
 import rocks.massi.trollsgames.constants.Extra;
 import rocks.massi.trollsgames.data.Game;
+import rocks.massi.trollsgames.data.GameSearchService;
+import rocks.massi.trollsgames.data.PhilibertSearchResponse;
+import rocks.massi.trollsgames.data.ThirdPartyServices;
+import rocks.massi.trollsgames.events.GameFoundOnPhilibertEvent;
+import rocks.massi.trollsgames.events.GameFoundOnTricTracEvent;
+import rocks.massi.trollsgames.services.Philibert;
 
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 public class GameDisplayActivity extends AppCompatActivity {
     private Game shownGame;
+    private TextView philibertSearch;
+    private GamesServicesAdapter adapter;
+    private List<GameSearchService> gameSearchServices;
+    private ProgressBar progressBar;
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(final GameFoundOnPhilibertEvent event) {
+        gameSearchServices.add(new GameSearchService(ThirdPartyServices.PHILIBERT,
+                shownGame,
+                event.getPhilibertSearchResponse().getProduct_link(),
+                event.getPhilibertSearchResponse().getPname()));
+        progressBar.setVisibility(View.INVISIBLE);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(final GameFoundOnTricTracEvent event) {
+        gameSearchServices.add(new GameSearchService(ThirdPartyServices.TRICTRAC,
+                shownGame,
+                event.getBoardgameResult().getUrl(),
+                event.getBoardgameResult().getTitle()));
+        progressBar.setVisibility(View.INVISIBLE);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(final GameSearchService event) {
+        Log.i(getClass().toString(), "Open on external service");
+        startActivity(new Intent(Intent.ACTION_VIEW,
+                Uri.parse(event.getUrl())));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_display);
+
+        gameSearchServices = new LinkedList<>();
+        adapter = new GamesServicesAdapter(getApplicationContext(), 0, gameSearchServices);
+        progressBar = findViewById(R.id.search_progress_bar);
 
         shownGame = (Game) getIntent().getSerializableExtra(Extra.POSTED_GAME);
         setTitle(shownGame.getName());
@@ -34,6 +103,8 @@ public class GameDisplayActivity extends AppCompatActivity {
                         String.format(Locale.FRANCE, " à %d", shownGame.getMaxPlayers()) : ""));
 
         ImageView iv = findViewById(R.id.gameDisplayImage);
+        ListView searchResults = findViewById(R.id.search_results_view);
+        searchResults.setAdapter(adapter);
 
         GlideApp.with(this)
                 .load(shownGame.getNormalizedThumbnail())
@@ -41,10 +112,11 @@ public class GameDisplayActivity extends AppCompatActivity {
                 .fitCenter()
                 .into(iv);
 
-        TextView gameDescription = findViewById(R.id.gameDisplayDescription);
-        gameDescription.setText(Html.fromHtml(shownGame.getDescription(), Html.FROM_HTML_MODE_COMPACT));
-        gameDescription.setMovementMethod(new ScrollingMovementMethod());
-        gameDescription.setTypeface(Typeface.createFromAsset(getAssets(), "font/Raleway-Regular.ttf"));
+        new PhilibertAsyncConnector().execute(shownGame);
+        new TricTracAsyncConnector().execute(shownGame);
+
+        TextView header = findViewById(R.id.philibert_header);
+        header.setTypeface(Typeface.createFromAsset(getAssets(), "font/Raleway-Regular.ttf"));
 
         TextView gameInformation = findViewById(R.id.gameDisplayInfo);
         gameInformation.setText(formatGameInformation(shownGame));
