@@ -58,11 +58,17 @@ public class GameDisplayActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(final GameFoundOnTricTracEvent event) {
-        gameSearchServices.add(new GameSearchService(ThirdPartyServices.TRICTRAC,
+        GameSearchService service = new GameSearchService(
+                ThirdPartyServices.TRICTRAC,
                 shownGame,
                 event.getBoardgameResult().getUrl(),
-                event.getBoardgameResult().getTitle()));
-        progressBar.setVisibility(View.INVISIBLE);
+                event.getBoardgameResult().getTitle());
+
+        if (! gameSearchServices.contains(service)) {
+            gameSearchServices.add(service);
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+
         adapter.notifyDataSetChanged();
     }
 
