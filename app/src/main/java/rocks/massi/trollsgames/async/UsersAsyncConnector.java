@@ -23,7 +23,7 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
     public UsersAsyncConnector() {
         connector = Feign.builder()
                 .decoder(new GsonDecoder())
-                .target(TrollsServer.class, "https://trolls-server.herokuapp.com");
+                .target(TrollsServer.class, "https://trolls-preprod.herokuapp.com");
     }
 
     private Game extractGameForId(int gameId) {

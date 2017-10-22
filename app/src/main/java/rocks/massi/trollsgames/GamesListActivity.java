@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -222,6 +223,19 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         ListView lv = findViewById(R.id.gameslist);
         gamesAdapter = new GamesAdapter(getApplicationContext(), 0, shownGames);
         lv.setAdapter(gamesAdapter);
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE)
+                    fab.show();
+                else
+                    fab.hide();
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            }
+        });
     }
 
     @Override
