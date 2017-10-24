@@ -130,6 +130,21 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         findViewById(R.id.fab).setEnabled(true);
         operationPending = false;
 
+        // Sort users alphabetically
+        Collections.sort(users, new Comparator<User>() {
+            @Override
+            public int compare(User o1, User o2) {
+                return o1.getForumNick().toLowerCase().compareTo(o2.getForumNick().toLowerCase());
+            }
+        });
+
+        SubMenu menu = ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(0).getSubMenu();
+        int index = 0;
+        for (User user : users) {
+            menu.add(Menu.NONE, index++, index, user.getForumNick());
+        }
+
+
         loadingUsersPb.setVisibility(View.INVISIBLE);
 
         loadingUsersTv.setText(R.string.loading_end);
@@ -138,8 +153,6 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 100)
     public void onUserEvent(final UserFetchEvent userFetchEvent) {
         if (userFetchEvent.isFinished()) {
-            SubMenu menu = ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(0).getSubMenu();
-            menu.add(Menu.NONE, users.size(), users.size(), userFetchEvent.getUser().getForumNick());
             users.add(userFetchEvent.getUser());
             loadingUsersPb.setProgress(loadingUsersPb.getProgress() + 1, true);
         }
