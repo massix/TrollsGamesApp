@@ -13,7 +13,9 @@ import rocks.massi.trollsgames.events.UserFetchEvent;
 import rocks.massi.trollsgames.events.UsersFetchedEvent;
 import rocks.massi.trollsgames.services.TrollsServer;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
 public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
     private TrollsServer connector;
@@ -21,9 +23,17 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
     private List<User> users;
 
     public UsersAsyncConnector() {
+        String serverAddress = "http://localhost:8180";
+        try {
+            Properties properties = new Properties();
+            properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
+            serverAddress = properties.getProperty("server.url");
+        } catch (IOException e) {
+            Log.e(getClass().getName(), "Could not load properties");
+        }
         connector = Feign.builder()
                 .decoder(new GsonDecoder())
-                .target(TrollsServer.class, "https://trolls-preprod.herokuapp.com");
+                .target(TrollsServer.class, serverAddress);
     }
 
     private Game extractGameForId(int gameId) {

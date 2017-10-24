@@ -352,12 +352,12 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
         for (Game g : activeUser.getGamesCollection()) {
 
-            if (g.isExtension()) {
+            if (g != null && g.isExtension()) {
                 if (! expansionsHidden && ! shownGames.contains(g))
                     shownGames.add(g);
             }
 
-            else if (! shownGames.contains(g))
+            else if (g != null && ! shownGames.contains(g))
                 shownGames.add(g);
         }
 
