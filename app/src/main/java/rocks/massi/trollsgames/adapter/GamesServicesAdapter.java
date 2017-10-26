@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
+import rocks.massi.trollsgames.GlideApp;
 import rocks.massi.trollsgames.R;
 import rocks.massi.trollsgames.data.GameSearchService;
 
@@ -40,14 +41,16 @@ public class GamesServicesAdapter extends ArrayAdapter<GameSearchService> {
 
         switch (g.getService()) {
             case TRICTRAC:
+                GlideApp.with(serviceImage)
+                        .load(R.drawable.tt_logo)
+                        .into(serviceImage);
                 gameServiceTv.setText("TricTrac");
-//                serviceImage.setImageResource(R.drawable.ic_search_black_24dp);
-                serviceImage.setImageResource(R.drawable.tt_logo);
                 break;
             case PHILIBERT:
+                GlideApp.with(serviceImage)
+                        .load(R.drawable.philibert_logo)
+                        .into(serviceImage);
                 gameServiceTv.setText("Philibert");
-//                serviceImage.setImageResource(R.drawable.ic_menu_gallery);
-                serviceImage.setImageResource(R.drawable.philibert_logo);
                 break;
         }
 
