@@ -6,7 +6,7 @@ public enum ThirdPartyServices {
 
     private String serviceName;
 
-    private ThirdPartyServices(String serviceName) {
+    ThirdPartyServices(String serviceName) {
         this.serviceName = serviceName;
     }
 }

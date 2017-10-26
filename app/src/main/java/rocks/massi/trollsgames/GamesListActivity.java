@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -27,6 +28,12 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.MalformedJsonException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -37,6 +44,7 @@ import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.data.User;
 import rocks.massi.trollsgames.events.*;
 
+import java.io.*;
 import java.util.*;
 
 public class GamesListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
@@ -141,10 +149,29 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             menu.add(Menu.NONE, index++, index, user.getForumNick());
         }
 
-
         loadingUsersPb.setVisibility(View.INVISIBLE);
 
-        loadingUsersTv.setText(R.string.loading_end);
+        if (usersFetchedEvent.isFromCache()) {
+            loadingUsersTv.setText(R.string.loading_end_cache);
+        }
+        else {
+            loadingUsersTv.setText(R.string.loading_end);
+        }
+
+        // Store in cache
+        Gson gson = new GsonBuilder().create();
+        File usersCache = new File(getCacheDir(), "users.json");
+
+        if (usersCache.exists()) {
+            usersCache.delete();
+        }
+
+        try (Writer writer = new FileWriter(usersCache)) {
+            gson.toJson(users, writer);
+            Log.i(getClass().getName(), "Stored cache to disk");
+        } catch (IOException e) {
+            Log.e(getClass().getName(), "Impossible to write cache.");
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 100)
@@ -260,6 +287,35 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             }
         });
+
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        try {
+            loadCache();
+        } catch (FileNotFoundException e) {
+            Log.e(getClass().getName(), "Impossible to read from cache.");
+        }
+    }
+
+    private void loadCache() throws FileNotFoundException {
+        File cachedUsers = new File(getCacheDir(), "users.json");
+
+        if (cachedUsers.exists()) {
+            try {
+                Gson gson = new GsonBuilder().create();
+                User[] usersFromCache = gson.fromJson(new JsonReader(new FileReader(cachedUsers)), User[].class);
+                Collections.addAll(users, usersFromCache);
+                Log.i(getClass().getName(), "Loaded cache from disk " + users.size());
+                EventBus.getDefault().post(new UsersFetchedEvent(users, true));
+            }
+            catch (JsonSyntaxException exception) {
+                Log.e(getClass().getName(), exception.getMessage());
+            }
+        }
     }
 
     @Override

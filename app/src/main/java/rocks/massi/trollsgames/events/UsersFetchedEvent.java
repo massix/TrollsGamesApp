@@ -10,4 +10,5 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UsersFetchedEvent {
     private final List<User> users;
+    private final boolean fromCache;
 }

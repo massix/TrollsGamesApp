@@ -25,6 +25,11 @@
         C\'est fini ! Vous pouvez maintenant cliquer sur un utilisateur dans le menu de gauche !
     </string>
 
+    <string name="loading_end_cache" translatable="true">
+        Vous aviez une cache ! Si vous souhaitez mettre à jour la liste des utilisateurs, cliquez sur
+        le petit bouton en bas à droite !
+    </string>
+
     <string name="navigation_drawer_open" translatable="true">
         Ouvrir la barre de navigation
     </string>

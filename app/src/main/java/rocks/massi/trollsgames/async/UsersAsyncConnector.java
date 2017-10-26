@@ -82,6 +82,6 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
     @Override
     protected void onPostExecute(List<User> users) {
         if (users != null)
-            EventBus.getDefault().post(new UsersFetchedEvent(users));
+            EventBus.getDefault().post(new UsersFetchedEvent(users, false));
     }
 }
