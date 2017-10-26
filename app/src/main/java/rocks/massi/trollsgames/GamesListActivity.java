@@ -31,9 +31,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.MalformedJsonException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -314,6 +312,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             }
             catch (JsonSyntaxException exception) {
                 Log.e(getClass().getName(), exception.getMessage());
+                cachedUsers.delete();
             }
         }
     }
@@ -388,7 +387,20 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             rebuildShownGamesList();
         }
 
-        gamesAdapter.notifyDataSetChanged();
+        else if (id == R.id.empty_cache) {
+            shownGames.clear();
+            users.clear();
+            SubMenu menu = ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(0).getSubMenu();
+            menu.clear();
+
+            gamesAdapter.notifyDataSetChanged();
+            loadingUsersTv.setVisibility(View.VISIBLE);
+            loadingUsersTv.setText(R.string.intro);
+
+            File cacheFile = new File(getCacheDir(), "users.json");
+            if (cacheFile.exists()) cacheFile.delete();
+        }
+
         lv.setSelectionAfterHeaderView();
         return super.onOptionsItemSelected(item);
     }
