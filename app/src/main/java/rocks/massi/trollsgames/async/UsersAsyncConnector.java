@@ -9,10 +9,7 @@ import org.greenrobot.eventbus.EventBus;
 import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.data.ServerInformation;
 import rocks.massi.trollsgames.data.User;
-import rocks.massi.trollsgames.events.MissingConnectionEvent;
-import rocks.massi.trollsgames.events.ServerInformationEvent;
-import rocks.massi.trollsgames.events.UserFetchEvent;
-import rocks.massi.trollsgames.events.UsersFetchedEvent;
+import rocks.massi.trollsgames.events.*;
 import rocks.massi.trollsgames.services.TrollsServer;
 
 import java.io.IOException;
@@ -66,8 +63,10 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
         } catch (RetryableException e) {
             Log.e("UsersAsyncConnector", "caught exception");
             EventBus.getDefault().post(new MissingConnectionEvent(e));
+        } catch (RuntimeException e) {
+            Log.e(getClass().getName(), "Server offline");
+            EventBus.getDefault().post(new ServerOfflineEvent());
         }
-
         return null;
     }
 

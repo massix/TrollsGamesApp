@@ -180,6 +180,14 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         offlineTv.setText(event.getServerInformation().getVersion());
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onServerOfflineEvent(final ServerOfflineEvent event) {
+        loadingUsersTv.setText(R.string.server_offline);
+        loadingUsersPb.setVisibility(View.INVISIBLE);
+        findViewById(R.id.fab).setEnabled(true);
+        operationPending = false;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

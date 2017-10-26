@@ -70,5 +70,6 @@
     </string>
 
     <string name="offline">Hors ligne</string>
+    <string name="server_offline">Euh.. le serveur semble être hors ligne. Désolé ! Réessayez plus tard ?</string>
 
 </resources>
