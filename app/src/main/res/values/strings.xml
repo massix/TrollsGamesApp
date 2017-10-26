@@ -69,4 +69,6 @@
         Voici ce que j\'ai trouvé sur Internet
     </string>
 
+    <string name="offline">Hors ligne</string>
+
 </resources>

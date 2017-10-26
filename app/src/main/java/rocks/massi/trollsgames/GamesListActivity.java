@@ -35,10 +35,7 @@ import rocks.massi.trollsgames.async.UsersAsyncConnector;
 import rocks.massi.trollsgames.constants.Extra;
 import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.data.User;
-import rocks.massi.trollsgames.events.GameSelectedEvent;
-import rocks.massi.trollsgames.events.MissingConnectionEvent;
-import rocks.massi.trollsgames.events.UserFetchEvent;
-import rocks.massi.trollsgames.events.UsersFetchedEvent;
+import rocks.massi.trollsgames.events.*;
 
 import java.util.*;
 
@@ -177,6 +174,12 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         operationPending = false;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onServerInformationEvent(final ServerInformationEvent event) {
+        TextView offlineTv = findViewById(R.id.connection_status_tv);
+        offlineTv.setText(event.getServerInformation().getVersion());
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -265,15 +268,22 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.games_list, menu);
+        List<TextView> textViews = new LinkedList<>();
 
         TextView navHeaderTv = findViewById(R.id.nav_header_tv);
-        navHeaderTv.setTypeface(Typeface.createFromAsset(getAssets(), "font/IndieFlower.ttf"));
-        navHeaderTv.setTextColor(getColor(R.color.gameDefault));
+        textViews.add(navHeaderTv);
 
         TextView navVersionTv = findViewById(R.id.nav_version_nb);
         navVersionTv.setText(getString(R.string.version_number, BuildConfig.VERSION_NAME));
-        navVersionTv.setTypeface(Typeface.createFromAsset(getAssets(), "font/IndieFlower.ttf"));
-        navVersionTv.setTextColor(getColor(R.color.gameDefault));
+        textViews.add(navVersionTv);
+
+        TextView connectionStatusTv = findViewById(R.id.connection_status_tv);
+        textViews.add(connectionStatusTv);
+
+        for (TextView tv : textViews) {
+            tv.setTypeface(Typeface.createFromAsset(getAssets(), "font/IndieFlower.ttf"));
+            tv.setTextColor(getColor(R.color.gameDefault));
+        }
 
         return true;
     }

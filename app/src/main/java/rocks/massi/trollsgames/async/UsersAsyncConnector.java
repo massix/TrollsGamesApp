@@ -7,8 +7,10 @@ import feign.RetryableException;
 import feign.gson.GsonDecoder;
 import org.greenrobot.eventbus.EventBus;
 import rocks.massi.trollsgames.data.Game;
+import rocks.massi.trollsgames.data.ServerInformation;
 import rocks.massi.trollsgames.data.User;
 import rocks.massi.trollsgames.events.MissingConnectionEvent;
+import rocks.massi.trollsgames.events.ServerInformationEvent;
 import rocks.massi.trollsgames.events.UserFetchEvent;
 import rocks.massi.trollsgames.events.UsersFetchedEvent;
 import rocks.massi.trollsgames.services.TrollsServer;
@@ -48,6 +50,8 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
     @Override
     protected List<User> doInBackground(Void... voids) {
         try {
+            ServerInformation serverInformation = connector.getInformation();
+            EventBus.getDefault().post(new ServerInformationEvent(serverInformation));
             users = connector.getUsers();
 
             for (User u : users) {
