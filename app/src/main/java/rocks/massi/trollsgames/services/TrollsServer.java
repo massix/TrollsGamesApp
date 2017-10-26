@@ -18,12 +18,6 @@ public interface TrollsServer {
     @RequestLine("GET /v1/collection/get/{nick}")
     List<Game> getCollectionForUser(@Param("nick") String nick);
 
-    @RequestLine("GET /v1/users/get/{nick}")
-    User getUser(@Param("nick") String nick);
-
-    @RequestLine("GET /v1/games/get/{id}")
-    Game getGame(@Param("id") int id);
-
     @RequestLine("GET /v1/server/information")
     ServerInformation getInformation();
 }

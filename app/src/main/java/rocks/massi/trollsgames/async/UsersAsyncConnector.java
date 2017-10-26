@@ -6,7 +6,6 @@ import feign.Feign;
 import feign.RetryableException;
 import feign.gson.GsonDecoder;
 import org.greenrobot.eventbus.EventBus;
-import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.data.ServerInformation;
 import rocks.massi.trollsgames.data.User;
 import rocks.massi.trollsgames.events.*;
@@ -18,7 +17,6 @@ import java.util.Properties;
 
 public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
     private TrollsServer connector;
-    private List<Game> games;
     private List<User> users;
 
     public UsersAsyncConnector() {
@@ -33,15 +31,6 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
         connector = Feign.builder()
                 .decoder(new GsonDecoder())
                 .target(TrollsServer.class, serverAddress);
-    }
-
-    private Game extractGameForId(int gameId) {
-        for (Game g : games) {
-            if (g.getId() == gameId)
-                return g;
-        }
-
-        return null;
     }
 
     @Override

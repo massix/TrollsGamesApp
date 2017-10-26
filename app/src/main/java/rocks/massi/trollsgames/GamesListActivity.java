@@ -69,6 +69,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
     private SensorHandling sensorHandling;
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onSensorChanged(SensorEvent event) {
         float x = event.values[0];
@@ -128,6 +129,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         sensorManager.unregisterListener(this);
     }
 
+    @SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onFinishEvent(final UsersFetchedEvent usersFetchedEvent) {
         findViewById(R.id.fab).setEnabled(true);
@@ -172,6 +174,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 100)
     public void onUserEvent(final UserFetchEvent userFetchEvent) {
         if (userFetchEvent.isFinished()) {
@@ -184,6 +187,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGameSelectedEvent(final GameSelectedEvent gameSelectedEvent) {
         Intent i = new Intent(this, GameDisplayActivity.class);
@@ -191,6 +195,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         startActivity(i);
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNetworkErrorEvent(final MissingConnectionEvent event) {
         loadingUsersTv.setText(R.string.missing_network);
@@ -199,12 +204,14 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         operationPending = false;
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onServerInformationEvent(final ServerInformationEvent event) {
         TextView offlineTv = findViewById(R.id.connection_status_tv);
         offlineTv.setText(event.getServerInformation().getVersion());
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onServerOfflineEvent(final ServerOfflineEvent event) {
         loadingUsersTv.setText(R.string.server_offline);
@@ -213,6 +220,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         operationPending = false;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -253,8 +261,10 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
                 loadingUsersTv.setText(R.string.loading_users);
 
-                getSupportActionBar().setTitle(R.string.app_name);
-                getSupportActionBar().setSubtitle("");
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(R.string.app_name);
+                    getSupportActionBar().setSubtitle("");
+                }
 
                 operationPending = true;
             }
@@ -299,6 +309,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void loadCache() throws FileNotFoundException {
         File cachedUsers = new File(getCacheDir(), "users.json");
 
@@ -351,6 +362,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         return true;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -426,7 +438,9 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         gamesAdapter.notifyDataSetChanged();
         lv.setSelectionAfterHeaderView();
 
-        getSupportActionBar().setTitle(activeUser.getForumNick());
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(activeUser.getForumNick());
+
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
@@ -474,6 +488,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
                 break;
         }
 
-        getSupportActionBar().setSubtitle(getResources().getString(R.string.user_game_count, shownGames.size()));
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setSubtitle(getResources().getString(R.string.user_game_count, shownGames.size()));
     }
 }

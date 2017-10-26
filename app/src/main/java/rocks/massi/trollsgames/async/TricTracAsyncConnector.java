@@ -13,7 +13,7 @@ import rocks.massi.trollsgames.services.TricTrac;
 
 
 public class TricTracAsyncConnector extends AsyncTask<Game, Void, Void> {
-    TricTrac tricTrac;
+    private TricTrac tricTrac;
 
     public TricTracAsyncConnector() {
         tricTrac = Feign.builder().decoder(new GsonDecoder()).target(TricTrac.class, "https://www.trictrac.net");

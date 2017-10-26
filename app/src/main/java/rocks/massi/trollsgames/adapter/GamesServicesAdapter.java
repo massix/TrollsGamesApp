@@ -21,6 +21,7 @@ public class GamesServicesAdapter extends ArrayAdapter<GameSearchService> {
         super(context, resource, objects);
     }
 
+    @SuppressWarnings("MissingTranslation")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final GameSearchService g = getItem(position);
@@ -44,13 +45,13 @@ public class GamesServicesAdapter extends ArrayAdapter<GameSearchService> {
                 GlideApp.with(serviceImage)
                         .load(R.drawable.tt_logo)
                         .into(serviceImage);
-                gameServiceTv.setText("TricTrac");
+                gameServiceTv.setText(R.string.TricTrac);
                 break;
             case PHILIBERT:
                 GlideApp.with(serviceImage)
                         .load(R.drawable.philibert_logo)
                         .into(serviceImage);
-                gameServiceTv.setText("Philibert");
+                gameServiceTv.setText(R.string.Philibert);
                 break;
         }
 

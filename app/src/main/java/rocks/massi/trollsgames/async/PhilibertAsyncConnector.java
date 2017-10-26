@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 public class PhilibertAsyncConnector extends AsyncTask<Game, Void, PhilibertSearchResponse> {
-    Philibert philibert;
+    private Philibert philibert;
 
     public PhilibertAsyncConnector() {
         philibert = Feign.builder().decoder(new GsonDecoder()).target(Philibert.class, "https://www.philibertnet.com");

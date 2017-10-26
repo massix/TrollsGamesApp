@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,37 +14,30 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import feign.Feign;
-import feign.gson.GsonDecoder;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.w3c.dom.Text;
-import rocks.massi.trollsgames.adapter.GamesAdapter;
 import rocks.massi.trollsgames.adapter.GamesServicesAdapter;
 import rocks.massi.trollsgames.async.PhilibertAsyncConnector;
 import rocks.massi.trollsgames.async.TricTracAsyncConnector;
 import rocks.massi.trollsgames.constants.Extra;
 import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.data.GameSearchService;
-import rocks.massi.trollsgames.data.PhilibertSearchResponse;
 import rocks.massi.trollsgames.data.ThirdPartyServices;
 import rocks.massi.trollsgames.events.GameFoundOnPhilibertEvent;
 import rocks.massi.trollsgames.events.GameFoundOnTricTracEvent;
-import rocks.massi.trollsgames.services.Philibert;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
 public class GameDisplayActivity extends AppCompatActivity {
     private Game shownGame;
-    private TextView philibertSearch;
     private GamesServicesAdapter adapter;
     private List<GameSearchService> gameSearchServices;
     private ProgressBar progressBar;
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(final GameFoundOnPhilibertEvent event) {
         gameSearchServices.add(new GameSearchService(ThirdPartyServices.PHILIBERT,
@@ -56,6 +48,7 @@ public class GameDisplayActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(final GameFoundOnTricTracEvent event) {
         GameSearchService service = new GameSearchService(
@@ -72,6 +65,7 @@ public class GameDisplayActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(final GameSearchService event) {
         Log.i(getClass().toString(), "Open on external service");
@@ -103,7 +97,8 @@ public class GameDisplayActivity extends AppCompatActivity {
         shownGame = (Game) getIntent().getSerializableExtra(Extra.POSTED_GAME);
         setTitle(shownGame.getName());
 
-        getSupportActionBar().setSubtitle(getResources().getString(R.string.players_count,
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setSubtitle(getResources().getString(R.string.players_count,
                 shownGame.getMinPlayers(),
                 shownGame.getMaxPlayers() > shownGame.getMinPlayers() ?
                         String.format(Locale.FRANCE, " à %d", shownGame.getMaxPlayers()) : ""));

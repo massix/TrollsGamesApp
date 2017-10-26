@@ -77,5 +77,7 @@
     <string name="offline">Hors ligne</string>
     <string name="server_offline">Euh.. le serveur semble être hors ligne. Désolé ! Réessayez plus tard ?</string>
     <string name="empty_cache">Vider la cache</string>
+    <string name="TricTrac" translatable="false">TricTrac</string>
+    <string name="Philibert" translatable="false">Philibert</string>
 
 </resources>
