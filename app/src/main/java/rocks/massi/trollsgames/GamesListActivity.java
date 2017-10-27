@@ -413,6 +413,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             if (cacheFile.exists()) cacheFile.delete();
         }
 
+        gamesAdapter.notifyDataSetChanged();
         lv.setSelectionAfterHeaderView();
         return super.onOptionsItemSelected(item);
     }
