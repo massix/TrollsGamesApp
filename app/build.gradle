@@ -20,7 +20,7 @@ android {
     }
 }
 
-
+android.defaultConfig.vectorDrawables.useSupportLibrary = true
 repositories {
     mavenCentral()
     maven { url 'https://maven.google.com' }
