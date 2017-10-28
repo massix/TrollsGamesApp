@@ -5,7 +5,7 @@ android {
 
     defaultConfig {
         applicationId "rocks.massi.trollsgames"
-        minSdkVersion 24
+        minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
         versionName "2.0"

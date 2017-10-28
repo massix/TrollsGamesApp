@@ -8,6 +8,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -179,7 +180,12 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
     public void onUserEvent(final UserFetchEvent userFetchEvent) {
         if (userFetchEvent.isFinished()) {
             users.add(userFetchEvent.getUser());
-            loadingUsersPb.setProgress(loadingUsersPb.getProgress() + 1, true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                loadingUsersPb.setProgress(loadingUsersPb.getProgress() + 1, true);
+            }
+            else {
+                loadingUsersPb.setProgress(loadingUsersPb.getProgress() + 1);
+            }
         }
         else {
             loadingUsersPb.setIndeterminate(false);
@@ -256,7 +262,12 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
                 new UsersAsyncConnector().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 loadingUsersPb.setVisibility(View.VISIBLE);
-                loadingUsersPb.setProgress(0, true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    loadingUsersPb.setProgress(0, true);
+                }
+                else {
+                    loadingUsersPb.setProgress(0);
+                }
                 loadingUsersTv.setVisibility(View.VISIBLE);
 
                 loadingUsersTv.setText(R.string.loading_users);
@@ -356,7 +367,9 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
         for (TextView tv : textViews) {
             tv.setTypeface(Typeface.createFromAsset(getAssets(), "font/IndieFlower.ttf"));
-            tv.setTextColor(getColor(R.color.gameDefault));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                tv.setTextColor(getColor(R.color.gameDefault));
+            }
         }
 
         return true;

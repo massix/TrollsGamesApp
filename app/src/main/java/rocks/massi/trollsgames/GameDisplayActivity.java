@@ -3,6 +3,7 @@ package rocks.massi.trollsgames;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -147,10 +148,17 @@ public class GameDisplayActivity extends AppCompatActivity {
     }
 
     private CharSequence formatGameInformation(Game g) {
-        return Html.fromHtml(getResources().getString(R.string.game_information,
-                g.getAuthors(),
-                g.getPlayingTime(),
-                g.getYearPublished(),
-                g.getRank()), Html.FROM_HTML_MODE_COMPACT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Html.fromHtml(getResources().getString(R.string.game_information,
+                    g.getAuthors(),
+                    g.getPlayingTime(),
+                    g.getYearPublished(),
+                    g.getRank()), Html.FROM_HTML_MODE_COMPACT);
+        }
+        else return Html.fromHtml(getResources().getString(R.string.game_information,
+                    g.getAuthors(),
+                    g.getPlayingTime(),
+                    g.getYearPublished(),
+                    g.getRank()));
     }
 }

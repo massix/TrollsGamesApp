@@ -1,7 +1,10 @@
 package rocks.massi.trollsgames.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +39,16 @@ public class GamesServicesAdapter extends ArrayAdapter<GameSearchService> {
         gameNameTv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "font/Raleway-Regular.ttf"));
         gameServiceTv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "font/Raleway-Regular.ttf"));
 
-        gameNameTv.setText(g.getDisplayName());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            gameNameTv.setTextColor(getContext().getColor(R.color.gameDefault));
+            gameServiceTv.setTextColor(getContext().getColor(R.color.gameExpansion));
+        }
+        else {
+            gameNameTv.setTextColor(Color.parseColor("#000000"));
+            gameServiceTv.setTextColor(Color.parseColor("#AFAFAF"));
+        }
 
+        gameNameTv.setText(g.getDisplayName());
         ImageView serviceImage = convertView.findViewById(R.id.service_image);
 
         switch (g.getService()) {
