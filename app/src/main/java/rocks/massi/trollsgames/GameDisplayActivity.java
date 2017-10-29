@@ -27,6 +27,7 @@ import rocks.massi.trollsgames.data.GameSearchService;
 import rocks.massi.trollsgames.data.ThirdPartyServices;
 import rocks.massi.trollsgames.events.GameFoundOnPhilibertEvent;
 import rocks.massi.trollsgames.events.GameFoundOnTricTracEvent;
+import rocks.massi.trollsgames.events.MissingConnectionEvent;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -64,6 +65,14 @@ public class GameDisplayActivity extends AppCompatActivity {
         }
 
         adapter.notifyDataSetChanged();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(final MissingConnectionEvent event) {
+        TextView header = findViewById(R.id.philibert_header);
+        header.setText(R.string.missing_network);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @SuppressWarnings("unused")

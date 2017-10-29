@@ -9,6 +9,7 @@ import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.data.trictrac.BoardgameResult;
 import rocks.massi.trollsgames.data.trictrac.SearchResponse;
 import rocks.massi.trollsgames.events.GameFoundOnTricTracEvent;
+import rocks.massi.trollsgames.events.MissingConnectionEvent;
 import rocks.massi.trollsgames.services.TricTrac;
 
 
@@ -31,6 +32,7 @@ public class TricTracAsyncConnector extends AsyncTask<Game, Void, Void> {
         }
         catch (Exception e) {
             Log.e(getClass().toString(), "Caught exception while querying TricTrac! " + e.getMessage());
+            EventBus.getDefault().post(new MissingConnectionEvent(e));
         }
 
         return null;

@@ -8,6 +8,7 @@ import org.greenrobot.eventbus.EventBus;
 import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.data.PhilibertSearchResponse;
 import rocks.massi.trollsgames.events.GameFoundOnPhilibertEvent;
+import rocks.massi.trollsgames.events.MissingConnectionEvent;
 import rocks.massi.trollsgames.services.Philibert;
 
 import java.util.Date;
@@ -27,14 +28,20 @@ public class PhilibertAsyncConnector extends AsyncTask<Game, Void, PhilibertSear
 
     @Override
     protected PhilibertSearchResponse doInBackground(Game... games) {
-        Game shownGame = games[0];
-        List<PhilibertSearchResponse> searchResponses = philibert.search(shownGame.getName(),
-                                                                        30,
-                                                                        String.valueOf(new Date().getTime()));
-        for (PhilibertSearchResponse searchResponse : searchResponses) {
-            Log.i(getClass().toString(), String.format("Found %s", searchResponse.getPname()));
-            Log.i(getClass().toString(), String.format("Url: %s", searchResponse.getProduct_link()));
-            EventBus.getDefault().post(new GameFoundOnPhilibertEvent(searchResponse));
+        try {
+            Game shownGame = games[0];
+            List<PhilibertSearchResponse> searchResponses = philibert.search(shownGame.getName(),
+                    30,
+                    String.valueOf(new Date().getTime()));
+            for (PhilibertSearchResponse searchResponse : searchResponses) {
+                Log.i(getClass().toString(), String.format("Found %s", searchResponse.getPname()));
+                Log.i(getClass().toString(), String.format("Url: %s", searchResponse.getProduct_link()));
+                EventBus.getDefault().post(new GameFoundOnPhilibertEvent(searchResponse));
+            }
+        }
+        catch (Exception e) {
+            Log.e(getClass().getName(), "Error while querying Philibert");
+            EventBus.getDefault().post(new MissingConnectionEvent(e));
         }
 
         return null;
