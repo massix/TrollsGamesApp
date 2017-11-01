@@ -259,7 +259,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
                 shownGames.clear();
                 gamesAdapter.notifyDataSetChanged();
 
-                new UsersAsyncConnector().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new UsersAsyncConnector(getString(R.string.server)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
                 loadingUsersPb.setVisibility(View.VISIBLE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

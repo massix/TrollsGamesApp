@@ -11,23 +11,13 @@ import rocks.massi.trollsgames.data.User;
 import rocks.massi.trollsgames.events.*;
 import rocks.massi.trollsgames.services.TrollsServer;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 
 public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
     private TrollsServer connector;
     private List<User> users;
 
-    public UsersAsyncConnector() {
-        String serverAddress = "http://localhost:8180";
-        try {
-            Properties properties = new Properties();
-            properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
-            serverAddress = properties.getProperty("server.url");
-        } catch (IOException e) {
-            Log.e(getClass().getName(), "Could not load properties");
-        }
+    public UsersAsyncConnector(String serverAddress) {
         connector = Feign.builder()
                 .decoder(new GsonDecoder())
                 .target(TrollsServer.class, serverAddress);
@@ -42,7 +32,7 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
 
             for (User u : users) {
                 u.buildCollection();
-                u.setGamesCollection(connector.getCollectionForUser(u.getForumNick()));
+                u.setGamesCollection(connector.getCollectionForUser(u.getBggNick()));
                 EventBus.getDefault().post(new UserFetchEvent(false, u, users.size()));
                 publishProgress(u);
             }
