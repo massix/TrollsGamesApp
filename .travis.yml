@@ -17,12 +17,11 @@ deploy:
   provider: releases
   api_key:
     secure: q6I0xWE2b0VgodltxT1/Lp2lSsCUDehzcfIV/qMa61aWPogW/Dz6RWP3Wy3tyYH60tQPaaLMZGGzoJdhGbyOcjez3XviSqOC0z+TEgyhhiWyyhds4/YEY3Bny37Kj0UNdnYEidLOCfPgRA6UMynfGUGFBIoIVN3N2Pb8/mz+L9+b5oePU92JUL8HcofrvQetvZ+vubNuil+1TdJ08qlUd7mGpKsEQ0MXWbO5rpD2PBgIkYM2hZiwTERvHWDO8XNdFMwmuWLZqF0AslTglGjfaJLeLsS22AwFzpPCJ8Geb1ocgm9INFe5Ch8nb0FzHEpZq7zBtcSsCR3VmN0NqixgqopgCs3153Ty8jMLPMraW8sAmSmD6X7QKAFqpIS+qX3ylpkcopOIWOsEGmpV4zbZURJiDF8LxBpzg9Tb5wd4wpL8PmIkrXWbqjwoS/EgD/mATss9WJsu09pIZ7KaqsX0pL3J3LgsE9sE6ZrdGHDHPYI9iZIa8A7y866UUQ1kjw4eT/LpUpqq2ACZjq59zl9UaM3310KyxoF9S5gojFKYtbzZHLWlMxmarkczLj1wlpYADUEqgCLJhq0P4FaMRUv57Esprhd1CfqBYCJN75hFlD1ZGUGTpA9CjkR9YF4M3j5ULph13zmY7/HxSPfvvh1MTkT0E3bWU0aInc3DtwADMAA=
-  file: TrollGames-${TRAVIS_TAG}.apk
+  file: TrollsGames-${TRAVIS_TAG}.apk
   skip_cleanup: true
   on:
     repo: massix/TrollsGamesApp
     tags: true
-    branch: master
 
 before_install:
 - openssl aes-256-cbc -K $encrypted_cbbd4fbdf86e_key -iv $encrypted_cbbd4fbdf86e_iv
