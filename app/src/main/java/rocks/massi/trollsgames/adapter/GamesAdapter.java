@@ -1,7 +1,9 @@
 package rocks.massi.trollsgames.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -32,13 +34,32 @@ public class GamesAdapter extends ArrayAdapter<Game> {
         }
 
         TextView tv = convertView.findViewById(R.id.gameName);
-        tv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "font/Montserrat-Regular.ttf"));
+        tv.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "font/Raleway-Regular.ttf"));
         tv.setText(g.getName());
+
+        if (g.isExtension()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                tv.setTextColor(getContext().getResources().getColor(R.color.gameExpansion, getContext().getTheme()));
+            }
+            else {
+                tv.setTextColor(Color.parseColor("#AFAFAF"));
+            }
+        }
+        else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                tv.setTextColor(getContext().getResources().getColor(R.color.gameDefault, getContext().getTheme()));
+            }
+            else {
+                tv.setTextColor(Color.parseColor("#000000"));
+            }
+        }
+
         ImageView iv = convertView.findViewById(R.id.gameImage);
-        GlideApp.with(convertView)
+
+        GlideApp.with(iv)
                 .load(g.getNormalizedThumbnail())
                 .placeholder(R.drawable.ic_search_black_24dp)
-                .fitCenter()
+                .circleCrop()
                 .into(iv);
 
         convertView.setOnClickListener(new View.OnClickListener() {

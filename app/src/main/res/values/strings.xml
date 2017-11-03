@@ -1,8 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-    <string name="app_name">Trolls De Jeux</string>
+    <string name="app_name" translatable="false">Trolls De Jeux</string>
+    <string name="sort_alpha" translatable="true">Par ordre alphabétique</string>
+    <string name="sort_bgg" translatable="true">Par classement BGG</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="intro" translatable="true">
+        Veuillez cliquer sur le petit bouton en bas à droite pour télécharger les informations des utilisateurs !
+    </string>
 
-    <string name="action_settings">Settings</string>
+    <string name="missing_network" translatable="true">
+        Je crois que vous n\'êtes pas connectés sur Internet.
+        Veuillez réessayer ultérieurement dans quelque minute.
+    </string>
+
+    <string name="loading_users" translatable="true">
+        Je télécharge les informations des utilisateurs…
+    </string>
+
+    <string name="user_game_count" translatable="true">
+        %1$d jeux possédés
+    </string>
+
+    <string name="loading_end" translatable="true">
+        C\'est fini ! Vous pouvez maintenant cliquer sur un utilisateur dans le menu de gauche !
+    </string>
+
+    <string name="loading_end_cache" translatable="true">
+        Vous aviez un cache ! Si vous souhaitez mettre à jour la liste des utilisateurs, cliquez sur
+        le petit bouton en bas à droite !
+    </string>
+
+    <string name="navigation_drawer_open" translatable="true">
+        Ouvrir la barre de navigation
+    </string>
+
+    <string name="navigation_drawer_close" translatable="true">
+        Fermer la barre de navigation
+    </string>
+
+    <string name="players_count" translatable="true">
+        Pour %1$d%2$s joueurs.
+    </string>
+
+    <!-- TODO: Find a better way to inject HTML in strings -->
+    <string name="game_information" translatable="true">
+        &lt;p>Crée par &lt;b>%1$s&lt;/b>&lt;/p>
+        &lt;p>Pour une durée de &lt;b>%2$d&lt;/b> minutes&lt;/p>
+        &lt;p>Publié en &lt;b>%3$d&lt;/b>&lt;/p>
+        &lt;p>Il occupe la place n. &lt;b>%4$d&lt;/b> sur &lt;i>BoardGameGeek&lt;/i>&lt;/p>
+    </string>
+
+    <string name="game_random" translatable="true">
+        Jeu aléatoire
+    </string>
+
+    <string name="open_bgg" translatable="true">
+        BGG
+    </string>
+
+    <string name="show_expansions" translatable="true">
+        Montrer les expansions
+    </string>
+
+    <string name="hide_expansions" translatable="true">
+        Cacher les expansions
+    </string>
+
+    <string name="version_number" translatable="true">
+        Version %1$s
+    </string>
+
+    <string name="philibert_header" translatable="true">
+        Voici ce que j\'ai trouvé sur Internet
+    </string>
+
+    <string name="offline">Hors ligne</string>
+    <string name="server_offline">Euh.. le serveur semble être hors ligne. Désolé ! Réessayez plus tard ?</string>
+    <string name="empty_cache">Vider le cache</string>
+    <string name="TricTrac" translatable="false">TricTrac</string>
+    <string name="Philibert" translatable="false">Philibert</string>
+
 </resources>

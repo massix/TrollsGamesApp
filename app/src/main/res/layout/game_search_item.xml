@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center">
+
+    <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp" app:srcCompat="@drawable/ic_menu_gallery"
+            android:id="@+id/service_image"/>
+
+    <LinearLayout
+            android:paddingLeft="16dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+        <TextView
+                android:text="Game Name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/game_name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" android:fontFamily="sans-serif"
+                android:textSize="18sp" android:gravity="top" android:maxLines="2"/>
+
+        <TextView
+                android:text="Service Description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/service_description"
+                android:layout_marginVertical="10dp" android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:gravity="bottom"/>
+
+    </LinearLayout>
+</LinearLayout>
