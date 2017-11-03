@@ -26,7 +26,7 @@
     </string>
 
     <string name="loading_end_cache" translatable="true">
-        Vous aviez une cache ! Si vous souhaitez mettre à jour la liste des utilisateurs, cliquez sur
+        Vous aviez un cache ! Si vous souhaitez mettre à jour la liste des utilisateurs, cliquez sur
         le petit bouton en bas à droite !
     </string>
 
@@ -76,7 +76,7 @@
 
     <string name="offline">Hors ligne</string>
     <string name="server_offline">Euh.. le serveur semble être hors ligne. Désolé ! Réessayez plus tard ?</string>
-    <string name="empty_cache">Vider la cache</string>
+    <string name="empty_cache">Vider le cache</string>
     <string name="TricTrac" translatable="false">TricTrac</string>
     <string name="Philibert" translatable="false">Philibert</string>
 
