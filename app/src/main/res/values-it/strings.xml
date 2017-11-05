@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-    <string name="app_name" translatable="false">Trolls De Jeux</string>
     <string name="sort_alpha" translatable="true">Ordine alfabetico</string>
     <string name="sort_bgg" translatable="true">Classifica BGG</string>
 
@@ -85,7 +84,4 @@
     <string name="offline">Non connesso</string>
     <string name="server_offline">Ooops.. credo che ci siano problemi con il server. Perché non provi più tardi?</string>
     <string name="empty_cache">Svuotare la cache</string>
-    <string name="TricTrac" translatable="false">TricTrac</string>
-    <string name="Philibert" translatable="false">Philibert</string>
-
 </resources>

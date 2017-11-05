@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-    <string name="app_name" translatable="false">Trolls De Jeux</string>
     <string name="sort_alpha" translatable="true">Par ordre alphabétique</string>
     <string name="sort_bgg" translatable="true">Par classement BGG</string>
 
@@ -85,7 +84,4 @@
     <string name="offline">Hors ligne</string>
     <string name="server_offline">Euh.. le serveur semble être hors ligne. Désolé ! Réessayez plus tard ?</string>
     <string name="empty_cache">Vider le cache</string>
-    <string name="TricTrac" translatable="false">TricTrac</string>
-    <string name="Philibert" translatable="false">Philibert</string>
-
 </resources>
