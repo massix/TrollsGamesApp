@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <string name="app_name" translatable="false">Trolls De Jeux</string>
-    <string name="sort_alpha" translatable="true">Alphabetical order</string>
-    <string name="sort_bgg" translatable="true">BGG Ranking</string>
+    <string name="sort_alpha" translatable="true">Par ordre alphabétique</string>
+    <string name="sort_bgg" translatable="true">Par classement BGG</string>
 
     <string name="menu_users" translatable="true">
-        Users
+        Utilisateurs
     </string>
 
     <string name="intro" translatable="true">
-        You may click on the little button at the bottom right corner to download the users\' information!
+        Veuillez cliquer sur le petit bouton en bas à droite pour télécharger les informations des utilisateurs !
     </string>
 
     <string name="missing_network" translatable="true">
-        I fear you\'re not connected to the Internet.
-        Please try again in a few minutes.
+        Je crois que vous n\'êtes pas connectés sur Internet.
+        Veuillez réessayer ultérieurement dans quelque minute.
     </string>
 
     <string name="loading_users" translatable="true">
-        Downloading users\' information…
+        Je télécharge les informations des utilisateurs…
     </string>
 
     <string name="user_game_count" translatable="true">
-        %1$d owned games
+        %1$d jeux possédés
     </string>
 
     <string name="loading_end" translatable="true">
-        It\'s over! You may now click on an user via the left navigation menu!
+        C\'est fini ! Vous pouvez maintenant cliquer sur un utilisateur dans le menu de gauche !
     </string>
 
     <string name="loading_end_cache" translatable="true">
-        You had a cache! If you\'d like to update the users\' list, click on the little button at
-        the bottom right corner!
+        Vous aviez un cache ! Si vous souhaitez mettre à jour la liste des utilisateurs, cliquez sur
+        le petit bouton en bas à droite !
     </string>
 
     <string name="navigation_drawer_open" translatable="true">
-        Open navigation bar
+        Ouvrir la barre de navigation
     </string>
 
     <string name="navigation_drawer_close" translatable="true">
-        Close navigation bar
+        Fermer la barre de navigation
     </string>
 
     <string name="players_count_diff" translatable="true">
-        For %1$d to %2$d players
+        De %1$d à %2$d joueurs
     </string>
 
     <string name="players_count_equal" translatable="true">
-        For %1$d player(s)
+        Pour %1$d joueur(s)
     </string>
 
     <!-- TODO: Find a better way to inject HTML in strings -->
     <string name="game_information" translatable="true">
-        &lt;p>Created by &lt;b>%1$s&lt;/b>&lt;/p>
-        &lt;p>For games lasting &lt;b>%2$d&lt;/b> minutes&lt;/p>
-        &lt;p>Published in &lt;b>%3$d&lt;/b>&lt;/p>
-        &lt;p>Currently occupying place n. &lt;b>%4$d&lt;/b> on &lt;i>BoardGameGeek&lt;/i>&lt;/p>
+        &lt;p>Crée par &lt;b>%1$s&lt;/b>&lt;/p>
+        &lt;p>Pour une durée de &lt;b>%2$d&lt;/b> minutes&lt;/p>
+        &lt;p>Publié en &lt;b>%3$d&lt;/b>&lt;/p>
+        &lt;p>Il occupe la place n. &lt;b>%4$d&lt;/b> sur &lt;i>BoardGameGeek&lt;/i>&lt;/p>
     </string>
 
     <string name="game_random" translatable="true">
-        Random game
+        Jeu aléatoire
     </string>
 
     <string name="open_bgg" translatable="true">
@@ -67,11 +67,11 @@
     </string>
 
     <string name="show_expansions" translatable="true">
-        Show expansions
+        Montrer les expansions
     </string>
 
     <string name="hide_expansions" translatable="true">
-        Hide expansions
+        Cacher les expansions
     </string>
 
     <string name="version_number" translatable="true">
@@ -79,12 +79,12 @@
     </string>
 
     <string name="philibert_header" translatable="true">
-        Here is what I found on the Internet.
+        Voici ce que j\'ai trouvé sur Internet
     </string>
 
-    <string name="offline">Offline</string>
-    <string name="server_offline">Ops.. the server seems to be offline. Sorry! Wanna try later?</string>
-    <string name="empty_cache">Empty cache</string>
+    <string name="offline">Hors ligne</string>
+    <string name="server_offline">Euh.. le serveur semble être hors ligne. Désolé ! Réessayez plus tard ?</string>
+    <string name="empty_cache">Vider le cache</string>
     <string name="TricTrac" translatable="false">TricTrac</string>
     <string name="Philibert" translatable="false">Philibert</string>
 
