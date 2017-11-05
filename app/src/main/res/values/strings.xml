@@ -88,6 +88,6 @@
     <string name="TricTrac" translatable="false">TricTrac</string>
     <string name="Philibert" translatable="false">Philibert</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="fragment_search_title" translatable="true">Internet search</string>
+    <string name="fragment_description_title" translatable="true">Game\'s description</string>
 </resources>

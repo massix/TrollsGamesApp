@@ -1,8 +1,10 @@
 package rocks.massi.trollsgames.adapter;
 
+import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import rocks.massi.trollsgames.R;
 import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.fragments.GameDescription;
 import rocks.massi.trollsgames.fragments.InternetSearch;
@@ -44,9 +46,11 @@ public class GamesDisplayFragmentAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
+//                return Resources.getSystem().getString(R.string.fragment_search_title);
                 return "Recherche Internet";
             case 1:
-                return "Description du jeu";
+                return "Description du jeu (en Anglais)";
+//                return Resources.getSystem().getString(R.string.fragment_description_title);
         }
 
         return super.getPageTitle(position);
