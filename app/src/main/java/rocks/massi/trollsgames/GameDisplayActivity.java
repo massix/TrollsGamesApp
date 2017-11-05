@@ -1,10 +1,12 @@
 package rocks.massi.trollsgames;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
@@ -107,11 +109,16 @@ public class GameDisplayActivity extends AppCompatActivity {
         shownGame = (Game) getIntent().getSerializableExtra(Extra.POSTED_GAME);
         setTitle(shownGame.getName());
 
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setSubtitle(getResources().getString(R.string.players_count,
-                shownGame.getMinPlayers(),
-                shownGame.getMaxPlayers() > shownGame.getMinPlayers() ?
-                        String.format(Locale.FRANCE, " à %d", shownGame.getMaxPlayers()) : ""));
+        if (getSupportActionBar() != null) {
+            ActionBar actionBar = getSupportActionBar();
+            Resources resources = getResources();
+            if (shownGame.getMaxPlayers() > shownGame.getMinPlayers()) {
+                actionBar.setSubtitle(resources.getString(R.string.players_count_diff, shownGame.getMinPlayers(), shownGame.getMaxPlayers()));
+            }
+            else {
+                actionBar.setSubtitle(resources.getString(R.string.players_count_equal, shownGame.getMaxPlayers()));
+            }
+        }
 
         ImageView iv = findViewById(R.id.gameDisplayImage);
         ListView searchResults = findViewById(R.id.search_results_view);
