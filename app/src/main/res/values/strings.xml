@@ -87,4 +87,7 @@
     <string name="empty_cache">Empty cache</string>
     <string name="TricTrac" translatable="false">TricTrac</string>
     <string name="Philibert" translatable="false">Philibert</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -6,39 +6,27 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import rocks.massi.trollsgames.GlideApp;
 import rocks.massi.trollsgames.R;
-import rocks.massi.trollsgames.adapter.GamesServicesAdapter;
+import rocks.massi.trollsgames.adapter.GamesDisplayFragmentAdapter;
 import rocks.massi.trollsgames.async.PhilibertAsyncConnector;
 import rocks.massi.trollsgames.async.TricTracAsyncConnector;
 import rocks.massi.trollsgames.constants.Extra;
 import rocks.massi.trollsgames.data.Game;
-import rocks.massi.trollsgames.data.GameSearchService;
-import rocks.massi.trollsgames.data.ThirdPartyServices;
-import rocks.massi.trollsgames.events.GameFoundOnPhilibertEvent;
-import rocks.massi.trollsgames.events.GameFoundOnTricTracEvent;
-import rocks.massi.trollsgames.events.MissingConnectionEvent;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
 
 public class GameDisplayActivity extends AppCompatActivity {
     private Game shownGame;
+    private GamesDisplayFragmentAdapter fragmentAdapter;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +61,10 @@ public class GameDisplayActivity extends AppCompatActivity {
         TextView gameInformation = findViewById(R.id.gameDisplayInfo);
         gameInformation.setText(formatGameInformation(shownGame));
         gameInformation.setTypeface(Typeface.createFromAsset(getAssets(), "font/Montserrat-Regular.ttf"));
+
+        fragmentAdapter = new GamesDisplayFragmentAdapter(getSupportFragmentManager(), shownGame);
+        viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(fragmentAdapter);
     }
 
     @Override
