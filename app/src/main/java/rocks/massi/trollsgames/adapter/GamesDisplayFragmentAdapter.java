@@ -42,6 +42,13 @@ public class GamesDisplayFragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
+        switch (position) {
+            case 0:
+                return "Recherche Internet";
+            case 1:
+                return "Description du jeu";
+        }
+
         return super.getPageTitle(position);
     }
 }
