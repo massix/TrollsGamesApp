@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/app_bar_games_list"
-        tools:context="rocks.massi.trollsgames.GamesListActivity">
+        tools:context="rocks.massi.trollsgames.activities.GamesListActivity">
 
     <ListView
             android:smoothScrollbar="true"

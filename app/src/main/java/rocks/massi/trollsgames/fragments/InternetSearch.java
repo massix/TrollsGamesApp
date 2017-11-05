@@ -1,4 +1,4 @@
-package layout;
+package rocks.massi.trollsgames.fragments;
 
 import android.content.Context;
 import android.content.Intent;

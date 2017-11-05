@@ -1,4 +1,4 @@
-package rocks.massi.trollsgames;
+package rocks.massi.trollsgames.activities;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -20,6 +20,8 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import rocks.massi.trollsgames.GlideApp;
+import rocks.massi.trollsgames.R;
 import rocks.massi.trollsgames.adapter.GamesServicesAdapter;
 import rocks.massi.trollsgames.async.PhilibertAsyncConnector;
 import rocks.massi.trollsgames.async.TricTracAsyncConnector;
