@@ -37,74 +37,11 @@ import java.util.Locale;
 
 public class GameDisplayActivity extends AppCompatActivity {
     private Game shownGame;
-    private GamesServicesAdapter adapter;
-    private List<GameSearchService> gameSearchServices;
-    private ProgressBar progressBar;
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(final GameFoundOnPhilibertEvent event) {
-        gameSearchServices.add(new GameSearchService(ThirdPartyServices.PHILIBERT,
-                shownGame,
-                event.getPhilibertSearchResponse().getProduct_link(),
-                event.getPhilibertSearchResponse().getPname()));
-        progressBar.setVisibility(View.INVISIBLE);
-        adapter.notifyDataSetChanged();
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(final GameFoundOnTricTracEvent event) {
-        GameSearchService service = new GameSearchService(
-                ThirdPartyServices.TRICTRAC,
-                shownGame,
-                event.getBoardgameResult().getUrl(),
-                event.getBoardgameResult().getTitle());
-
-        if (! gameSearchServices.contains(service)) {
-            gameSearchServices.add(service);
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-
-        adapter.notifyDataSetChanged();
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(final MissingConnectionEvent event) {
-        TextView header = findViewById(R.id.philibert_header);
-        header.setText(R.string.missing_network);
-        progressBar.setVisibility(View.INVISIBLE);
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(final GameSearchService event) {
-        Log.i(getClass().toString(), "Open on external service");
-        startActivity(new Intent(Intent.ACTION_VIEW,
-                Uri.parse(event.getUrl())));
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_display);
-
-        gameSearchServices = new LinkedList<>();
-        adapter = new GamesServicesAdapter(getApplicationContext(), 0, gameSearchServices);
-        progressBar = findViewById(R.id.search_progress_bar);
 
         shownGame = (Game) getIntent().getSerializableExtra(Extra.POSTED_GAME);
         setTitle(shownGame.getName());
@@ -121,8 +58,6 @@ public class GameDisplayActivity extends AppCompatActivity {
         }
 
         ImageView iv = findViewById(R.id.gameDisplayImage);
-        ListView searchResults = findViewById(R.id.search_results_view);
-        searchResults.setAdapter(adapter);
 
         GlideApp.with(this)
                 .load(shownGame.getNormalizedThumbnail())
@@ -132,9 +67,6 @@ public class GameDisplayActivity extends AppCompatActivity {
 
         new PhilibertAsyncConnector().execute(shownGame);
         new TricTracAsyncConnector().execute(shownGame);
-
-        TextView header = findViewById(R.id.philibert_header);
-        header.setTypeface(Typeface.createFromAsset(getAssets(), "font/Raleway-Regular.ttf"));
 
         TextView gameInformation = findViewById(R.id.gameDisplayInfo);
         gameInformation.setText(formatGameInformation(shownGame));
