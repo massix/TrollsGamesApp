@@ -62,7 +62,7 @@ public class GameDisplayActivity extends AppCompatActivity {
         gameInformation.setText(formatGameInformation(shownGame));
         gameInformation.setTypeface(Typeface.createFromAsset(getAssets(), "font/Montserrat-Regular.ttf"));
 
-        fragmentAdapter = new GamesDisplayFragmentAdapter(getSupportFragmentManager(), shownGame);
+        fragmentAdapter = new GamesDisplayFragmentAdapter(getSupportFragmentManager(), shownGame, getApplicationContext());
         viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(fragmentAdapter);
     }
