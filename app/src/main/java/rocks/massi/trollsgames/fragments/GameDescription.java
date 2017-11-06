@@ -4,14 +4,12 @@ package rocks.massi.trollsgames.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.TextView;
-import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.R;
+import rocks.massi.trollsgames.data.Game;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,7 +43,6 @@ public class GameDescription extends Fragment {
         View ret = inflater.inflate(R.layout.fragment_game_description, container, false);
         TextView description = ret.findViewById(R.id.game_description);
         description.setText(Html.fromHtml(shownGame.getDescription()));
-        description.setMovementMethod(new ScrollingMovementMethod());
         return ret;
     }
 
