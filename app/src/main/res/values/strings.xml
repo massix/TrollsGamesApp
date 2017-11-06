@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <string name="app_name" translatable="false">Trolls De Jeux</string>
+    <string name="app_subtitle" translatable="false">Association Antiboise\nJeux de Société</string>
     <string name="sort_alpha" translatable="true">Alphabetical order</string>
     <string name="sort_bgg" translatable="true">BGG Ranking</string>
 

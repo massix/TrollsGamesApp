@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,10 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -62,6 +60,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
     private boolean expansionsHidden;
     private SensorManager sensorManager;
+    private boolean debugActivated = false;
 
     private class SensorHandling {
         float lastAcceleration;
@@ -215,8 +214,9 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onServerInformationEvent(final ServerInformationEvent event) {
-        TextView offlineTv = findViewById(R.id.connection_status_tv);
-        offlineTv.setText(event.getServerInformation().getVersion());
+        if (debugActivated) {
+            Snackbar.make(findViewById(R.id.fab), event.getServerInformation().getVersion(), Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -361,11 +361,34 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         textViews.add(navHeaderTv);
 
         TextView navVersionTv = findViewById(R.id.nav_version_nb);
-        navVersionTv.setText(getString(R.string.version_number, BuildConfig.VERSION_NAME));
         textViews.add(navVersionTv);
 
-        TextView connectionStatusTv = findViewById(R.id.connection_status_tv);
-        textViews.add(connectionStatusTv);
+        final ImageView logoView = findViewById(R.id.logo_view);
+        logoView.setOnClickListener(new View.OnClickListener() {
+            private long last = 0;
+            private int counter = 0;
+
+            @Override
+            public void onClick(View v) {
+                long now = new Date().getTime();
+
+                if ((now - last) <= 300) {
+                    counter++;
+                } else {
+                    counter = 1;
+                }
+
+                last = now;
+
+                if (counter >= 7) {
+                    String text = String.format("Version %s\nConnecting to server '%s'",
+                            BuildConfig.VERSION_NAME, getString(R.string.server));
+                    Snackbar.make(logoView, text, Snackbar.LENGTH_LONG).show();
+                    counter = 0;
+                    debugActivated = true;
+                }
+            }
+        });
 
         for (TextView tv : textViews) {
             tv.setTypeface(Typeface.createFromAsset(getAssets(), "font/IndieFlower.ttf"));
