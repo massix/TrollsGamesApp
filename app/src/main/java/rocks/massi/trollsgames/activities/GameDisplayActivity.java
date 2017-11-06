@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -65,6 +66,14 @@ public class GameDisplayActivity extends AppCompatActivity {
         fragmentAdapter = new GamesDisplayFragmentAdapter(getSupportFragmentManager(), shownGame, getApplicationContext());
         viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(fragmentAdapter);
+
+        PagerTitleStrip pagerTitleStrip = findViewById(R.id.pager_title_strip);
+        for (int i = 0; i < pagerTitleStrip.getChildCount(); i++) {
+            if (pagerTitleStrip.getChildAt(i) instanceof TextView) {
+                TextView tv = (TextView) pagerTitleStrip.getChildAt(i);
+                tv.setTypeface(Typeface.createFromAsset(getAssets(), "font/Raleway-Regular.ttf"));
+            }
+        }
     }
 
     @Override

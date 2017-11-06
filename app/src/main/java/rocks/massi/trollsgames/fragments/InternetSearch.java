@@ -1,8 +1,6 @@
 package rocks.massi.trollsgames.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,10 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -29,14 +25,6 @@ import rocks.massi.trollsgames.events.MissingConnectionEvent;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link InternetSearch.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link InternetSearch#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class InternetSearch extends Fragment {
     private GamesServicesAdapter adapter;
     private List<GameSearchService> gameSearchServices;
@@ -83,8 +71,6 @@ public class InternetSearch extends Fragment {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(final MissingConnectionEvent event) {
-        TextView header = getView().findViewById(R.id.philibert_header);
-        header.setText(R.string.missing_network);
         progressBar.setVisibility(View.INVISIBLE);
     }
 
@@ -131,8 +117,6 @@ public class InternetSearch extends Fragment {
         ListView searchResults = ret.findViewById(R.id.search_results_view);
         searchResults.setAdapter(adapter);
 
-        TextView header = ret.findViewById(R.id.philibert_header);
-        header.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "font/Raleway-Regular.ttf"));
         return ret;
     }
 

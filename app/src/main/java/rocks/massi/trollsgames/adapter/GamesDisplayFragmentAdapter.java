@@ -44,7 +44,7 @@ public class GamesDisplayFragmentAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return context.getResources().getString(R.string.fragment_search_title);
+                return context.getResources().getString(R.string.philibert_header);
             case 1:
                 return context.getResources().getString(R.string.fragment_description_title);
         }
