@@ -10,3 +10,7 @@
 .idea
 !/gradle/wrapper/gradle-wrapper.jar
 app/libs/
+/.keystore
+/travis-key
+/ssh-config
+/secrets.tgz
