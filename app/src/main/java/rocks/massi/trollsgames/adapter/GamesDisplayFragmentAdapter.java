@@ -13,10 +13,6 @@ public class GamesDisplayFragmentAdapter extends FragmentPagerAdapter {
     private Game shownGame;
     private Context context;
 
-    public GamesDisplayFragmentAdapter(FragmentManager fm) {
-        super(fm);
-    }
-
     public GamesDisplayFragmentAdapter(FragmentManager fm, Game shownGame, Context context) {
         super(fm);
         this.shownGame = shownGame;
