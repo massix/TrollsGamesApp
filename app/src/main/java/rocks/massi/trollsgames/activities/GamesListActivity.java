@@ -1,4 +1,4 @@
-package rocks.massi.trollsgames;
+package rocks.massi.trollsgames.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +36,8 @@ import com.google.gson.stream.JsonReader;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import rocks.massi.trollsgames.BuildConfig;
+import rocks.massi.trollsgames.R;
 import rocks.massi.trollsgames.adapter.GamesAdapter;
 import rocks.massi.trollsgames.async.UsersAsyncConnector;
 import rocks.massi.trollsgames.constants.Extra;

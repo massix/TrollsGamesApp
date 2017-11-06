@@ -84,4 +84,7 @@
     <string name="offline">Hors ligne</string>
     <string name="server_offline">Euh.. le serveur semble être hors ligne. Désolé ! Réessayez plus tard ?</string>
     <string name="empty_cache">Vider le cache</string>
+
+    <string name="fragment_search_title" translatable="true">Recherche Internet</string>
+    <string name="fragment_description_title" translatable="true">Description du jeu (en Anglais)</string>
 </resources>
