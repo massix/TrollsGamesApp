@@ -2,9 +2,7 @@ package rocks.massi.trollsgames.data;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @Data
@@ -17,15 +15,6 @@ public class User {
 
     private List<Integer> collection;
     private List<Game> gamesCollection;
-
-    public void buildCollection() {
-        collection = new LinkedList<>();
-        String[] gamesCollection = games.split(" ");
-        for (val game : gamesCollection) {
-            val gameId = Integer.valueOf(game);
-            collection.add(gameId);
-        }
-    }
 
     @Override
     public String toString() {

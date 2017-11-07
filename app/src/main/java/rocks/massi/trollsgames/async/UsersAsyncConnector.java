@@ -31,7 +31,6 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
             users = connector.getUsers();
 
             for (User u : users) {
-                u.buildCollection();
                 u.setGamesCollection(connector.getCollectionForUser(u.getBggNick()));
                 EventBus.getDefault().post(new UserFetchEvent(false, u, users.size()));
                 publishProgress(u);
