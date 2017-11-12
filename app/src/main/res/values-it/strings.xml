@@ -94,5 +94,14 @@
     <string name="fragment_description_title" translatable="true">Descrizione del gioco (in Inglese)</string>
     <string name="about" translatable="true">Informazioni</string>
     <string name="confirm_yes">Sì</string>
+    <string name="confirm_no">No</string>
+
+    <string name="about_text">
+        Trolls De Jeux version %1$s.&lt;br/>
+        &quot;Un giorno, quest\'app vi preparerà il caffè!&quot;&lt;br/>
+        Visita il sito &lt;a href="https://www.trollsdejeux.fr">trollsdejeux.fr&lt;/a>&lt;br/>
+        Contatta lo sviluppatore &lt;a href="mailto:massi@massi.rocks">massi@massi.rocks&lt;/a>
+    </string>
+
 
 </resources>

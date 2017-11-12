@@ -96,4 +96,12 @@
     <string name="confirm_yes">Oui</string>
     <string name="confirm_no">Non</string>
 
+    <string name="about_text">
+        Trolls De Jeux version %1$s.&lt;br/>
+        &quot;Un jour cette app vous préparera le café!&quot;&lt;br/>
+        Visitez le site à &lt;a href="https://www.trollsdejeux.fr">trollsdejeux.fr&lt;/a>&lt;br/>
+        Contactez le développeur à &lt;a href="mailto:massi@massi.rocks">massi@massi.rocks&lt;/a>
+    </string>
+
+
 </resources>
