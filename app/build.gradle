@@ -9,7 +9,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
-        versionName "2.0"
+        versionName "2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -38,7 +38,7 @@ android {
 
         debug {
             applicationIdSuffix = ".debug"
-            resValue "string", "server", "https://staging.massi.rocks"
+            resValue "string", "server", "http://dev.massi.rocks"
         }
     }
 }
