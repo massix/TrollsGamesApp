@@ -56,7 +56,10 @@
         &lt;p>Created by &lt;b>%1$s&lt;/b>&lt;/p>
         &lt;p>For games lasting &lt;b>%2$d&lt;/b> minutes&lt;/p>
         &lt;p>Published in &lt;b>%3$d&lt;/b>&lt;/p>
-        &lt;p>Currently occupying place n. &lt;b>%4$d&lt;/b> on &lt;i>BoardGameGeek&lt;/i>&lt;/p>
+    </string>
+
+    <string name="bgg_rank" translatable="true">
+        &lt;p>Currently occupying place n. &lt;b>%1$d&lt;/b> on &lt;i>BoardGameGeek&lt;/i>&lt;/p>
     </string>
 
     <string name="game_random" translatable="true">

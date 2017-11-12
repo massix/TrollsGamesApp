@@ -99,17 +99,16 @@ public class GameDisplayActivity extends AppCompatActivity {
     }
 
     private CharSequence formatGameInformation(Game g) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return Html.fromHtml(getResources().getString(R.string.game_information,
-                    g.getAuthors(),
-                    g.getPlayingTime(),
-                    g.getYearPublished(),
-                    g.getRank()), Html.FROM_HTML_MODE_COMPACT);
+        String gameDescription = getResources().getString(R.string.game_information,
+                g.getAuthors(), g.getPlayingTime(), g.getYearPublished());
+        if (g.getRank() >= 0) {
+            gameDescription += getResources().getString(R.string.bgg_rank, g.getRank());
         }
-        else return Html.fromHtml(getResources().getString(R.string.game_information,
-                    g.getAuthors(),
-                    g.getPlayingTime(),
-                    g.getYearPublished(),
-                    g.getRank()));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Html.fromHtml(gameDescription, Html.FROM_HTML_MODE_COMPACT);
+        } else {
+            return Html.fromHtml(gameDescription);
+        }
     }
 }
