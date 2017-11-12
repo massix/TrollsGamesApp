@@ -87,7 +87,12 @@
     <string name="offline">Non connesso</string>
     <string name="server_offline">Ooops.. credo che ci siano problemi con il server. Perché non provi più tardi?</string>
     <string name="empty_cache">Svuotare la cache</string>
+    <string name="empty_cache_title">Svuotare la cache</string>
+    <string name="empty_cache_text">Vuoi davvero svuotare la cache?</string>
 
     <string name="fragment_search_title" translatable="true">Ricerca Internet</string>
     <string name="fragment_description_title" translatable="true">Descrizione del gioco (in Inglese)</string>
+    <string name="about" translatable="true">Informazioni</string>
+    <string name="confirm_yes">Sì</string>
+
 </resources>
