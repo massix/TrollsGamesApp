@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" android:weightSum="1">
+
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="180dp" app:srcCompat="@mipmap/ic_launcher_round" android:id="@+id/imageView"
+            android:layout_weight="0.28"/>
+    <TextView
+            android:id="@+id/dialog_text"
+            android:text="@string/about_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"/>
+</LinearLayout>

@@ -94,4 +94,18 @@
 
     <string name="fragment_search_title" translatable="true">Internet search</string>
     <string name="fragment_description_title" translatable="true">Game\'s description</string>
+
+    <string name="empty_cache_title" translatable="true">Empty cache</string>
+    <string name="empty_cache_text" translatable="true">Do you really want to empty the cache?</string>
+
+    <string name="about" translatable="true">About</string>
+    <string name="about_text">
+        Trolls De Jeux version %1$s.&lt;br/>
+        &quot;One day, this app will brew your coffee!&quot;&lt;br/>
+        Visit our website at &lt;a href="https://www.trollsdejeux.fr">trollsdejeux.fr&lt;/a>&lt;br/>
+        Contact the developer at &lt;a href="mailto:massi@massi.rocks">massi@massi.rocks&lt;/a>
+    </string>
+
+    <string name="confirm_yes">Yes</string>
+    <string name="confirm_no">No</string>
 </resources>

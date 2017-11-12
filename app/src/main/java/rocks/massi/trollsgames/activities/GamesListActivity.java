@@ -1,6 +1,7 @@
 package rocks.massi.trollsgames.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
@@ -19,8 +20,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,6 +64,8 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
     private boolean expansionsHidden;
     private SensorManager sensorManager;
     private boolean debugActivated = false;
+    private ImageView imageView;
+    private TextView dialogtext;
 
     private class SensorHandling {
         float lastAcceleration;
@@ -435,20 +440,46 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             }
 
             rebuildShownGamesList();
-        }
+        } else if (id == R.id.empty_cache) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.empty_cache_title);
+            builder.setMessage(R.string.empty_cache_text);
+            builder.setPositiveButton(R.string.confirm_yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.i(getClass().getName(), "Empty cache action");
+                    shownGames.clear();
+                    users.clear();
+                    SubMenu menu = ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(0).getSubMenu();
+                    menu.clear();
 
-        else if (id == R.id.empty_cache) {
-            shownGames.clear();
-            users.clear();
-            SubMenu menu = ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(0).getSubMenu();
-            menu.clear();
+                    gamesAdapter.notifyDataSetChanged();
+                    loadingUsersTv.setVisibility(View.VISIBLE);
+                    loadingUsersTv.setText(R.string.intro);
 
-            gamesAdapter.notifyDataSetChanged();
-            loadingUsersTv.setVisibility(View.VISIBLE);
-            loadingUsersTv.setText(R.string.intro);
+                    File cacheFile = new File(getCacheDir(), "users.json");
+                    if (cacheFile.exists()) cacheFile.delete();
+                }
+            });
 
-            File cacheFile = new File(getCacheDir(), "users.json");
-            if (cacheFile.exists()) cacheFile.delete();
+            builder.setNegativeButton(R.string.confirm_no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+
+            builder.create().show();
+        } else if (id == R.id.about) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getString(R.string.about));
+            View inflatedView = getLayoutInflater().inflate(R.layout.about_dialog, null);
+            TextView dialogText = inflatedView.findViewById(R.id.dialog_text);
+            dialogText.setTypeface(Typeface.createFromAsset(getAssets(), "font/Raleway-Regular.ttf"));
+            dialogText.setText(Html.fromHtml(getString(R.string.about_text, BuildConfig.VERSION_NAME)));
+
+            builder.setView(inflatedView);
+            builder.create().show();
         }
 
         gamesAdapter.notifyDataSetChanged();
