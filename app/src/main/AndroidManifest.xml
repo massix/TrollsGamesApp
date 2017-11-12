@@ -22,7 +22,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.GameDisplayActivity" android:parentActivityName=".activities.GamesListActivity" android:screenOrientation="portrait" />
+        <activity android:name=".activities.GameDisplayActivity"
+                  android:parentActivityName=".activities.GamesListActivity"
+                  android:screenOrientation="portrait"/>
 
     </application>
 
