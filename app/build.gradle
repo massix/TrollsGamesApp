@@ -55,7 +55,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.google.code.gson:gson:2.8.2'
-    compile 'com.google.code.gson:gson:2.8.2'
     compile 'com.netflix.feign:feign-gson:8.18.0'
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:support-v4:26.+'
