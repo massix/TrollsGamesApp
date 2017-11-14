@@ -424,6 +424,11 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
                     loadingUsersTv.setVisibility(View.VISIBLE);
                     loadingUsersTv.setText(R.string.intro);
 
+                    if (getSupportActionBar() != null) {
+                        getSupportActionBar().setTitle(R.string.app_name);
+                        getSupportActionBar().setSubtitle("");
+                    }
+
                     File cacheFile = new File(getCacheDir(), "users.json");
                     if (cacheFile.exists()) cacheFile.delete();
                 }
