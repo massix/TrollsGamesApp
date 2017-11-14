@@ -103,5 +103,14 @@
         Contactez le développeur à &lt;a href="mailto:massi@massi.rocks">massi@massi.rocks&lt;/a>
     </string>
 
+    <string name="loading_cache">
+        Je récupère le contenu du cache
+    </string>
+
+    <string name="cache_error">
+        La bonne nouvelle : vous aviez un cache !\n
+        La mauvaise nouvelle : ceci n\'est plus valide !\n
+        La solution : téléchargez une nouvelle liste d\'utilisateurs en cliquant le petit joli bouton en bas à droite !
+    </string>
 
 </resources>

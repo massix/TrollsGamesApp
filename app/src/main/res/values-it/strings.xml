@@ -103,5 +103,12 @@
         Contatta lo sviluppatore &lt;a href="mailto:massi@massi.rocks">massi@massi.rocks&lt;/a>
     </string>
 
+    <string name="loading_cache">
+        Carico la cache
+    </string>
+
+    <string name="cache_error">
+        La tua cache non è più valida. Mi dispiace ma dovrai caricare di nuovo la lista degli utenti!
+    </string>
 
 </resources>
