@@ -4,11 +4,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 import lombok.RequiredArgsConstructor;
 import org.greenrobot.eventbus.EventBus;
 import rocks.massi.trollsgames.data.User;
 import rocks.massi.trollsgames.events.CacheFoundEvent;
+import rocks.massi.trollsgames.events.CacheInvalidEvent;
 import rocks.massi.trollsgames.events.UserFetchEvent;
 import rocks.massi.trollsgames.events.UsersFetchedEvent;
 
@@ -34,7 +36,11 @@ public class CacheAsyncLoader extends AsyncTask<Void, Void, User[]> {
                 Log.i(getClass().getName(), "Loaded cache from disk " + usersFromCache.length);
                 return usersFromCache;
             } catch (FileNotFoundException exception) {
+                EventBus.getDefault().post(new CacheInvalidEvent(exception.getMessage()));
                 Log.w(getClass().getName(), "Cache not found");
+            } catch (JsonSyntaxException exception) {
+                EventBus.getDefault().post(new CacheInvalidEvent(exception.getMessage()));
+                Log.w(getClass().getName(), "Invalid cache " + exception.getMessage());
             }
         }
 

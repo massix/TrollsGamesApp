@@ -230,6 +230,15 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onInvalidCacheEvent(final CacheInvalidEvent event) {
+        loadingUsersTv.setText(R.string.cache_error);
+        if (debugActivated) {
+            Snackbar.make(findViewById(R.id.fab), "Invalid cache " + event.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+        }
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -107,4 +107,8 @@
         Carico la cache
     </string>
 
+    <string name="cache_error">
+        La tua cache non è più valida. Mi dispiace ma dovrai caricare di nuovo la lista degli utenti!
+    </string>
+
 </resources>
