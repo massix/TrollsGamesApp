@@ -103,5 +103,8 @@
         Contatta lo sviluppatore &lt;a href="mailto:massi@massi.rocks">massi@massi.rocks&lt;/a>
     </string>
 
+    <string name="loading_cache">
+        Carico la cache
+    </string>
 
 </resources>

@@ -108,4 +108,6 @@
 
     <string name="confirm_yes">Yes</string>
     <string name="confirm_no">No</string>
+
+    <string name="loading_cache" translatable="true">Loading cache</string>
 </resources>
