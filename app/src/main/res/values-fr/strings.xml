@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="sort_alpha" translatable="true">Par ordre alphabétique</string>
+    <string name="sort_bgg" translatable="true">Par classement BGG</string>
+
+    <string name="menu_users" translatable="true">
+        Utilisateurs
+    </string>
+
+    <string name="intro" translatable="true">
+        Veuillez cliquer sur le petit bouton en bas à droite pour télécharger les informations des utilisateurs !
+    </string>
+
+    <string name="missing_network" translatable="true">
+        Je crois que vous n\'êtes pas connectés sur Internet.
+        Veuillez réessayer ultérieurement dans quelque minute.
+    </string>
+
+    <string name="loading_users" translatable="true">
+        Je télécharge les informations des utilisateurs…
+    </string>
+
+    <string name="user_game_count" translatable="true">
+        %1$d jeux possédés
+    </string>
+
+    <string name="loading_end" translatable="true">
+        C\'est fini ! Vous pouvez maintenant cliquer sur un utilisateur dans le menu de gauche !
+    </string>
+
+    <string name="loading_end_cache" translatable="true">
+        Vous aviez un cache ! Si vous souhaitez mettre à jour la liste des utilisateurs, cliquez sur
+        le petit bouton en bas à droite !
+    </string>
+
+    <string name="navigation_drawer_open" translatable="true">
+        Ouvrir la barre de navigation
+    </string>
+
+    <string name="navigation_drawer_close" translatable="true">
+        Fermer la barre de navigation
+    </string>
+
+    <string name="players_count_diff" translatable="true">
+        De %1$d à %2$d joueurs
+    </string>
+
+    <string name="players_count_equal" translatable="true">
+        Pour %1$d joueur(s)
+    </string>
+
+    <!-- TODO: Find a better way to inject HTML in strings -->
+    <string name="game_information" translatable="true">
+        &lt;p>Crée par &lt;b>%1$s&lt;/b>&lt;/p>
+        &lt;p>Pour une durée de &lt;b>%2$d&lt;/b> minutes&lt;/p>
+        &lt;p>Publié en &lt;b>%3$d&lt;/b>&lt;/p>
+    </string>
+
+    <string name="bgg_rank" translatable="true">
+        &lt;p>Il occupe la place n. &lt;b>%1$d&lt;/b> sur &lt;i>BoardGameGeek&lt;/i>&lt;/p>
+    </string>
+
+    <string name="game_random" translatable="true">
+        Jeu aléatoire
+    </string>
+
+    <string name="open_bgg" translatable="true">
+        BGG
+    </string>
+
+    <string name="show_expansions" translatable="true">
+        Montrer les expansions
+    </string>
+
+    <string name="hide_expansions" translatable="true">
+        Cacher les expansions
+    </string>
+
+    <string name="version_number" translatable="true">
+        Version %1$s
+    </string>
+
+    <string name="philibert_header" translatable="true">
+        Voici ce que j\'ai trouvé sur Internet
+    </string>
+
+    <string name="offline">Hors ligne</string>
+    <string name="server_offline">Euh.. le serveur semble être hors ligne. Désolé ! Réessayez plus tard ?</string>
+    <string name="empty_cache">Vider le cache</string>
+    <string name="empty_cache_title" translatable="true">Vider le cache</string>
+    <string name="empty_cache_text" translatable="true">Êtes-vous sûr de vouloir vider le cache?</string>
+
+    <string name="fragment_search_title" translatable="true">Recherche Internet</string>
+    <string name="fragment_description_title" translatable="true">Description du jeu (en Anglais)</string>
+    <string name="about" translatable="true">À propos</string>
+    <string name="confirm_yes">Oui</string>
+    <string name="confirm_no">Non</string>
+
+    <string name="about_text">
+        Trolls De Jeux version %1$s.&lt;br/>
+        &quot;Un jour cette app vous préparera le café!&quot;&lt;br/>
+        Visitez le site à &lt;a href="https://www.trollsdejeux.fr">trollsdejeux.fr&lt;/a>&lt;br/>
+        Contactez le développeur à &lt;a href="mailto:massi@massi.rocks">massi@massi.rocks&lt;/a>
+    </string>
+
+    <string name="loading_cache">
+        Je récupère le contenu du cache
+    </string>
+
+    <string name="cache_error">
+        La bonne nouvelle : vous aviez un cache !\n
+        La mauvaise nouvelle : ceci n\'est plus valide !\n
+        La solution : téléchargez une nouvelle liste d\'utilisateurs en cliquant le petit joli bouton en bas à droite !
+    </string>
+
+</resources>

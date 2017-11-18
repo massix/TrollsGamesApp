@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="sort_alpha" translatable="true">Ordine alfabetico</string>
+    <string name="sort_bgg" translatable="true">Classifica BGG</string>
+
+    <string name="menu_users" translatable="true">
+        Utenti
+    </string>
+
+    <string name="intro" translatable="true">
+        Clicca sul bottoncino in basso a destra per scaricare le informazioni degli utenti!
+    </string>
+
+    <string name="missing_network" translatable="true">
+        Potresti non essere connesso ad Internet.
+        Riprova fra qualche minuto.
+    </string>
+
+    <string name="loading_users" translatable="true">
+        Scarico le informazioni degli utenti…
+    </string>
+
+    <string name="user_game_count" translatable="true">
+        %1$d giochi nella collezione
+    </string>
+
+    <string name="loading_end" translatable="true">
+        Fatto! Ora puoi aprire il menù di sinistra per vedere la lista degli utenti.
+    </string>
+
+    <string name="loading_end_cache" translatable="true">
+        Avevi delle informazioni già salvate! Se vuoi puoi comunque aggiornare la lista degli utenti
+        cliccando sul bottoncino in basso a destra.
+    </string>
+
+    <string name="navigation_drawer_open" translatable="true">
+        Aprire la barra di navigazione
+    </string>
+
+    <string name="navigation_drawer_close" translatable="true">
+        Chiudere la barra di navigazione
+    </string>
+
+    <string name="players_count_diff" translatable="true">
+        Da %1$d a %2$d giocatori
+    </string>
+
+    <string name="players_count_equal" translatable="true">
+        Per %1$d giocatori
+    </string>
+
+    <!-- TODO: Find a better way to inject HTML in strings -->
+    <string name="game_information" translatable="true">
+        &lt;p>Creato da &lt;b>%1$s&lt;/b>&lt;/p>
+        &lt;p>Per una durata di &lt;b>%2$d&lt;/b> minuti&lt;/p>
+        &lt;p>Pubblicato nel &lt;b>%3$d&lt;/b>&lt;/p>
+    </string>
+
+    <string name="bgg_rank" translatable="true">
+        &lt;p>Occupa la posizione n. &lt;b>%1$d&lt;/b> su &lt;i>BoardGameGeek&lt;/i>&lt;/p>
+    </string>
+
+    <string name="game_random" translatable="true">
+        Gioco casuale
+    </string>
+
+    <string name="open_bgg" translatable="true">
+        BGG
+    </string>
+
+    <string name="show_expansions" translatable="true">
+        Mostrare le espansioni
+    </string>
+
+    <string name="hide_expansions" translatable="true">
+        Nascondere le espansioni
+    </string>
+
+    <string name="version_number" translatable="true">
+        Versione %1$s
+    </string>
+
+    <string name="philibert_header" translatable="true">
+        Ecco cosa ho trovato su Internet
+    </string>
+
+    <string name="offline">Non connesso</string>
+    <string name="server_offline">Ooops.. credo che ci siano problemi con il server. Perché non provi più tardi?</string>
+    <string name="empty_cache">Svuotare la cache</string>
+    <string name="empty_cache_title">Svuotare la cache</string>
+    <string name="empty_cache_text">Vuoi davvero svuotare la cache?</string>
+
+    <string name="fragment_search_title" translatable="true">Ricerca Internet</string>
+    <string name="fragment_description_title" translatable="true">Descrizione del gioco (in Inglese)</string>
+    <string name="about" translatable="true">Informazioni</string>
+    <string name="confirm_yes">Sì</string>
+    <string name="confirm_no">No</string>
+
+    <string name="about_text">
+        Trolls De Jeux version %1$s.&lt;br/>
+        &quot;Un giorno, quest\'app vi preparerà il caffè!&quot;&lt;br/>
+        Visita il sito &lt;a href="https://www.trollsdejeux.fr">trollsdejeux.fr&lt;/a>&lt;br/>
+        Contatta lo sviluppatore &lt;a href="mailto:massi@massi.rocks">massi@massi.rocks&lt;/a>
+    </string>
+
+    <string name="loading_cache">
+        Carico la cache
+    </string>
+
+    <string name="cache_error">
+        La tua cache non è più valida. Mi dispiace ma dovrai caricare di nuovo la lista degli utenti!
+    </string>
+
+</resources>

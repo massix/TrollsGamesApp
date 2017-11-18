@@ -28,6 +28,10 @@
         <item android:id="@+id/empty_cache"
               android:title="@string/empty_cache"
               android:orderInCategory="104"
+              app:showAsAction="never"/>
+        <item android:id="@+id/about"
+              android:title="@string/about"
+              android:orderInCategory="105"
               app:showAsAction="never" />
     </group>
 </menu>

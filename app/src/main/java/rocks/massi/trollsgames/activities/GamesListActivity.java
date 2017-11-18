@@ -1,6 +1,7 @@
-package rocks.massi.trollsgames;
+package rocks.massi.trollsgames.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
@@ -12,38 +13,38 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.stream.JsonReader;
+import android.widget.*;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import rocks.massi.trollsgames.BuildConfig;
+import rocks.massi.trollsgames.R;
 import rocks.massi.trollsgames.adapter.GamesAdapter;
+import rocks.massi.trollsgames.async.CacheAsyncLoader;
+import rocks.massi.trollsgames.async.CacheAsyncWriter;
 import rocks.massi.trollsgames.async.UsersAsyncConnector;
 import rocks.massi.trollsgames.constants.Extra;
 import rocks.massi.trollsgames.data.Game;
 import rocks.massi.trollsgames.data.User;
 import rocks.massi.trollsgames.events.*;
 
-import java.io.*;
+import java.io.File;
 import java.util.*;
 
 public class GamesListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
@@ -60,6 +61,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
     private boolean expansionsHidden;
     private SensorManager sensorManager;
+    private boolean debugActivated = false;
 
     private class SensorHandling {
         float lastAcceleration;
@@ -159,20 +161,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             loadingUsersTv.setText(R.string.loading_end);
         }
 
-        // Store in cache
-        Gson gson = new GsonBuilder().create();
-        File usersCache = new File(getCacheDir(), "users.json");
-
-        if (usersCache.exists()) {
-            usersCache.delete();
-        }
-
-        try (Writer writer = new FileWriter(usersCache)) {
-            gson.toJson(users, writer);
-            Log.i(getClass().getName(), "Stored cache to disk");
-        } catch (IOException e) {
-            Log.e(getClass().getName(), "Impossible to write cache.");
-        }
+        new CacheAsyncWriter(getCacheDir(), users).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @SuppressWarnings("unused")
@@ -213,8 +202,9 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onServerInformationEvent(final ServerInformationEvent event) {
-        TextView offlineTv = findViewById(R.id.connection_status_tv);
-        offlineTv.setText(event.getServerInformation().getVersion());
+        if (debugActivated) {
+            Snackbar.make(findViewById(R.id.fab), event.getServerInformation().getVersion(), Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -224,6 +214,29 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         loadingUsersPb.setVisibility(View.INVISIBLE);
         findViewById(R.id.fab).setEnabled(true);
         operationPending = false;
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCacheFoundEvent(final CacheFoundEvent event) {
+        loadingUsersTv.setText(R.string.loading_cache);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCacheStoredEvent(final CacheStoredEvent event) {
+        if (debugActivated) {
+            Snackbar.make(findViewById(R.id.fab), "Cache stored!", BaseTransientBottomBar.LENGTH_LONG).show();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onInvalidCacheEvent(final CacheInvalidEvent event) {
+        loadingUsersTv.setText(R.string.cache_error);
+        if (debugActivated) {
+            Snackbar.make(findViewById(R.id.fab), "Invalid cache " + event.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -245,6 +258,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         loadingUsersTv.setTypeface(Typeface.createFromAsset(getAssets(), "font/Raleway-Regular.ttf"));
 
         loadingUsersTv.setText(R.string.intro);
+        new CacheAsyncLoader(getCacheDir()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -306,37 +320,6 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             }
         });
-
-    }
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        try {
-            loadCache();
-        } catch (FileNotFoundException e) {
-            Log.e(getClass().getName(), "Impossible to read from cache.");
-        }
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void loadCache() throws FileNotFoundException {
-        File cachedUsers = new File(getCacheDir(), "users.json");
-
-        if (cachedUsers.exists()) {
-            try {
-                Gson gson = new GsonBuilder().create();
-                User[] usersFromCache = gson.fromJson(new JsonReader(new FileReader(cachedUsers)), User[].class);
-                Collections.addAll(users, usersFromCache);
-                Log.i(getClass().getName(), "Loaded cache from disk " + users.size());
-                EventBus.getDefault().post(new UsersFetchedEvent(users, true));
-            }
-            catch (JsonSyntaxException exception) {
-                Log.e(getClass().getName(), exception.getMessage());
-                cachedUsers.delete();
-            }
-        }
     }
 
     @Override
@@ -359,11 +342,34 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         textViews.add(navHeaderTv);
 
         TextView navVersionTv = findViewById(R.id.nav_version_nb);
-        navVersionTv.setText(getString(R.string.version_number, BuildConfig.VERSION_NAME));
         textViews.add(navVersionTv);
 
-        TextView connectionStatusTv = findViewById(R.id.connection_status_tv);
-        textViews.add(connectionStatusTv);
+        final ImageView logoView = findViewById(R.id.logo_view);
+        logoView.setOnClickListener(new View.OnClickListener() {
+            private long last = 0;
+            private int counter = 0;
+
+            @Override
+            public void onClick(View v) {
+                long now = new Date().getTime();
+
+                if ((now - last) <= 300) {
+                    counter++;
+                } else {
+                    counter = 1;
+                }
+
+                last = now;
+
+                if (counter >= 7) {
+                    String text = String.format("Version %s\nConnecting to server '%s'",
+                            BuildConfig.VERSION_NAME, getString(R.string.server));
+                    Snackbar.make(logoView, text, Snackbar.LENGTH_LONG).show();
+                    counter = 0;
+                    debugActivated = true;
+                }
+            }
+        });
 
         for (TextView tv : textViews) {
             tv.setTypeface(Typeface.createFromAsset(getAssets(), "font/IndieFlower.ttf"));
@@ -410,20 +416,51 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             }
 
             rebuildShownGamesList();
-        }
+        } else if (id == R.id.empty_cache) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.empty_cache_title);
+            builder.setMessage(R.string.empty_cache_text);
+            builder.setPositiveButton(R.string.confirm_yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.i(getClass().getName(), "Empty cache action");
+                    shownGames.clear();
+                    users.clear();
+                    SubMenu menu = ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(0).getSubMenu();
+                    menu.clear();
 
-        else if (id == R.id.empty_cache) {
-            shownGames.clear();
-            users.clear();
-            SubMenu menu = ((NavigationView) findViewById(R.id.nav_view)).getMenu().getItem(0).getSubMenu();
-            menu.clear();
+                    gamesAdapter.notifyDataSetChanged();
+                    loadingUsersTv.setVisibility(View.VISIBLE);
+                    loadingUsersTv.setText(R.string.intro);
 
-            gamesAdapter.notifyDataSetChanged();
-            loadingUsersTv.setVisibility(View.VISIBLE);
-            loadingUsersTv.setText(R.string.intro);
+                    if (getSupportActionBar() != null) {
+                        getSupportActionBar().setTitle(R.string.app_name);
+                        getSupportActionBar().setSubtitle("");
+                    }
 
-            File cacheFile = new File(getCacheDir(), "users.json");
-            if (cacheFile.exists()) cacheFile.delete();
+                    File cacheFile = new File(getCacheDir(), "users.json");
+                    if (cacheFile.exists()) cacheFile.delete();
+                }
+            });
+
+            builder.setNegativeButton(R.string.confirm_no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+
+            builder.create().show();
+        } else if (id == R.id.about) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getString(R.string.about));
+            View inflatedView = getLayoutInflater().inflate(R.layout.about_dialog, null);
+            TextView dialogText = inflatedView.findViewById(R.id.dialog_text);
+            dialogText.setTypeface(Typeface.createFromAsset(getAssets(), "font/Raleway-Regular.ttf"));
+            dialogText.setText(Html.fromHtml(getString(R.string.about_text, BuildConfig.VERSION_NAME)));
+
+            builder.setView(inflatedView);
+            builder.create().show();
         }
 
         gamesAdapter.notifyDataSetChanged();
