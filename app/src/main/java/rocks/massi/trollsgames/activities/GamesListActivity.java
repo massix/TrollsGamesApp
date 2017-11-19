@@ -58,6 +58,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
     private GamesAdapter gamesAdapter;
     private boolean operationPending;
     private boolean displayingQuote = false;
+    private boolean resultsFromSearch = false;
 
     private ProgressBar loadingUsersPb;
     private TextView loadingUsersTv;
@@ -257,6 +258,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         loadingUsersTv.setVisibility(View.INVISIBLE);
         loadingUsersPb.setIndeterminate(false);
         loadingUsersPb.setVisibility(View.INVISIBLE);
+        resultsFromSearch = true;
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(getString(R.string.search_header));
@@ -443,13 +445,11 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
         ListView lv = findViewById(R.id.gameslist);
 
-        if (id == R.id.sort_alpha && !shownGames.isEmpty()) {
+        if (id == R.id.sort_alpha && !shownGames.isEmpty() && !resultsFromSearch) {
             Log.i("GamesListActivity", "Alphabetical order");
             currentRanking = CurrentRanking.ALPHABETICAL;
             rebuildShownGamesList();
-        }
-
-        else if (id == R.id.sort_rank && !shownGames.isEmpty()) {
+        } else if (id == R.id.sort_rank && !shownGames.isEmpty() && !resultsFromSearch) {
             Log.i("GamesListActivity", "Rank order");
             currentRanking = CurrentRanking.BGG_RANKING;
             rebuildShownGamesList();
@@ -458,9 +458,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         else if (id == R.id.game_random && !shownGames.isEmpty()) {
             EventBus.getDefault().post(new GameSelectedEvent(
                     shownGames.get(new Random().nextInt(shownGames.size()))));
-        }
-
-        else if (id == R.id.expansions_toggle && !shownGames.isEmpty()) {
+        } else if (id == R.id.expansions_toggle && !shownGames.isEmpty() && !resultsFromSearch) {
             Log.i("GamesListActivity", "Toggle expansions");
             if (expansionsHidden) {
                 expansionsHidden = false;
@@ -549,6 +547,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             getSupportActionBar().setTitle(activeUser.getForumNick());
 
         drawer.closeDrawer(GravityCompat.START);
+        resultsFromSearch = false;
 
         return true;
     }
