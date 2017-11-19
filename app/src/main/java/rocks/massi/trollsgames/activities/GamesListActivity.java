@@ -39,6 +39,7 @@ import rocks.massi.trollsgames.R;
 import rocks.massi.trollsgames.adapter.GamesAdapter;
 import rocks.massi.trollsgames.async.CacheAsyncLoader;
 import rocks.massi.trollsgames.async.CacheAsyncWriter;
+import rocks.massi.trollsgames.async.SearchAsyncConnector;
 import rocks.massi.trollsgames.async.UsersAsyncConnector;
 import rocks.massi.trollsgames.constants.Extra;
 import rocks.massi.trollsgames.data.Game;
@@ -57,6 +58,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
     private GamesAdapter gamesAdapter;
     private boolean operationPending;
     private boolean displayingQuote = false;
+    private boolean resultsFromSearch = false;
 
     private ProgressBar loadingUsersPb;
     private TextView loadingUsersTv;
@@ -250,6 +252,24 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         loadingUsersTv.setText(formattedText);
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSearchFinishedEvent(final SearchFinishedEvent event) {
+        loadingUsersTv.setVisibility(View.INVISIBLE);
+        loadingUsersPb.setIndeterminate(false);
+        loadingUsersPb.setVisibility(View.INVISIBLE);
+        resultsFromSearch = true;
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(getString(R.string.search_header));
+            getSupportActionBar().setSubtitle(getString(R.string.search_result, event.getGames().size()));
+        }
+
+        shownGames.clear();
+        shownGames.addAll(event.getGames());
+        gamesAdapter.notifyDataSetChanged();
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -331,6 +351,33 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             }
         });
+
+        final SearchView searchView = findViewById(R.id.game_search_tv);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                // Clear shown games
+                shownGames.clear();
+                gamesAdapter.notifyDataSetChanged();
+
+                // Show progress bar
+                loadingUsersPb.setVisibility(View.VISIBLE);
+                loadingUsersPb.setIndeterminate(true);
+
+                // Remove focus
+                searchView.clearFocus();
+
+                // Start asynchronous search
+                new SearchAsyncConnector(query, getString(R.string.server)).execute();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     @Override
@@ -398,13 +445,11 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
         ListView lv = findViewById(R.id.gameslist);
 
-        if (id == R.id.sort_alpha && !shownGames.isEmpty()) {
+        if (id == R.id.sort_alpha && !shownGames.isEmpty() && !resultsFromSearch) {
             Log.i("GamesListActivity", "Alphabetical order");
             currentRanking = CurrentRanking.ALPHABETICAL;
             rebuildShownGamesList();
-        }
-
-        else if (id == R.id.sort_rank && !shownGames.isEmpty()) {
+        } else if (id == R.id.sort_rank && !shownGames.isEmpty() && !resultsFromSearch) {
             Log.i("GamesListActivity", "Rank order");
             currentRanking = CurrentRanking.BGG_RANKING;
             rebuildShownGamesList();
@@ -413,9 +458,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         else if (id == R.id.game_random && !shownGames.isEmpty()) {
             EventBus.getDefault().post(new GameSelectedEvent(
                     shownGames.get(new Random().nextInt(shownGames.size()))));
-        }
-
-        else if (id == R.id.expansions_toggle && !shownGames.isEmpty()) {
+        } else if (id == R.id.expansions_toggle && !shownGames.isEmpty() && !resultsFromSearch) {
             Log.i("GamesListActivity", "Toggle expansions");
             if (expansionsHidden) {
                 expansionsHidden = false;
@@ -504,6 +547,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             getSupportActionBar().setTitle(activeUser.getForumNick());
 
         drawer.closeDrawer(GravityCompat.START);
+        resultsFromSearch = false;
 
         return true;
     }
