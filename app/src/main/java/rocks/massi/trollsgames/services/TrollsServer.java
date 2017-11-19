@@ -24,4 +24,7 @@ public interface TrollsServer {
 
     @RequestLine("GET /v1/server/quote")
     Quote getQuote();
+
+    @RequestLine("GET /v1/games/search?q={search}")
+    List<Game> search(@Param("search") String search);
 }
