@@ -111,4 +111,8 @@
         La tua cache non è più valida. Mi dispiace ma dovrai caricare di nuovo la lista degli utenti!
     </string>
 
+    <string name="search_header" translatable="true">Ricerca</string>
+    <string name="search_result" translatable="true">Trovati %1$d giochi</string>
+
+
 </resources>

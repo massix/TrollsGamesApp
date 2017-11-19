@@ -114,4 +114,7 @@
         I\'m afraid your cache is no longer valid.\n
         Please reload the users\' list by clicking on the nice little red button at the bottom right corner!
     </string>
+
+    <string name="search_header" translatable="true">Search result</string>
+    <string name="search_result" translatable="true">%1$d games found</string>
 </resources>

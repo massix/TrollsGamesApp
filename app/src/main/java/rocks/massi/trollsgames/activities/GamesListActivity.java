@@ -258,8 +258,10 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         loadingUsersPb.setIndeterminate(false);
         loadingUsersPb.setVisibility(View.INVISIBLE);
 
-        getSupportActionBar().setTitle("Search result");
-        getSupportActionBar().setSubtitle(event.getGames().size() + " games found.");
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(getString(R.string.search_header));
+            getSupportActionBar().setSubtitle(getString(R.string.search_result, event.getGames().size()));
+        }
 
         shownGames.clear();
         shownGames.addAll(event.getGames());
