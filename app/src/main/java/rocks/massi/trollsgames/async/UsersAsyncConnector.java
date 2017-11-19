@@ -6,6 +6,7 @@ import feign.Feign;
 import feign.RetryableException;
 import feign.gson.GsonDecoder;
 import org.greenrobot.eventbus.EventBus;
+import rocks.massi.trollsgames.data.Quote;
 import rocks.massi.trollsgames.data.ServerInformation;
 import rocks.massi.trollsgames.data.User;
 import rocks.massi.trollsgames.events.*;
@@ -29,6 +30,13 @@ public class UsersAsyncConnector extends AsyncTask<Void, User, List<User>> {
             ServerInformation serverInformation = connector.getInformation();
             EventBus.getDefault().post(new ServerInformationEvent(serverInformation));
             users = connector.getUsers();
+
+            try {
+                Quote quote = connector.getQuote();
+                EventBus.getDefault().post(new QuoteReceivedEvent(quote));
+            } catch (Exception e) {
+                Log.w(getClass().getName(), "Connecting to old server, refusing to display random quote");
+            }
 
             for (User u : users) {
                 u.setGamesCollection(connector.getCollectionForUser(u.getBggNick()));

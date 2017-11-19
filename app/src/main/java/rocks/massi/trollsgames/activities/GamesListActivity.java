@@ -24,6 +24,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,6 +56,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
     private GamesAdapter gamesAdapter;
     private boolean operationPending;
+    private boolean displayingQuote = false;
 
     private ProgressBar loadingUsersPb;
     private TextView loadingUsersTv;
@@ -156,8 +158,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
         if (usersFetchedEvent.isFromCache()) {
             loadingUsersTv.setText(R.string.loading_end_cache);
-        }
-        else {
+        } else if (!displayingQuote) {
             loadingUsersTv.setText(R.string.loading_end);
         }
 
@@ -237,6 +238,16 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         if (debugActivated) {
             Snackbar.make(findViewById(R.id.fab), "Invalid cache " + event.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onQuoteReceivedEvent(final QuoteReceivedEvent event) {
+        Spanned formattedText = Html.fromHtml(
+                "<p>" + event.getQuote().getQuote() + "</p>" +
+                        "<footer>-- " + event.getQuote().getAuthor() + "</footer>");
+        displayingQuote = true;
+        loadingUsersTv.setText(formattedText);
     }
 
     @SuppressWarnings("deprecation")
