@@ -27,7 +27,7 @@ public class Game implements Comparable<Game>, Serializable {
     }
 
     public String getNormalizedThumbnail() {
-        if (thumbnail.startsWith("//"))
+        if (thumbnail != null && thumbnail.startsWith("//"))
             return "https:" + thumbnail;
 
         return thumbnail;

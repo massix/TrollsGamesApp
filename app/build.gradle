@@ -38,7 +38,7 @@ android {
 
         debug {
             applicationIdSuffix = ".debug"
-            resValue "string", "server", "https://staging.massi.rocks"
+            resValue "string", "server", "http://dev.massi.rocks"
         }
     }
 }
