@@ -113,4 +113,7 @@
         La solution : téléchargez une nouvelle liste d\'utilisateurs en cliquant le petit joli bouton en bas à droite !
     </string>
 
+    <string name="search_header" translatable="true">Recherche</string>
+    <string name="search_result" translatable="true">%1$d jeux trouvés</string>
+
 </resources>

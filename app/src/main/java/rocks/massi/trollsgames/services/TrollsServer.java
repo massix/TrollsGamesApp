@@ -3,6 +3,7 @@ package rocks.massi.trollsgames.services;
 import feign.Param;
 import feign.RequestLine;
 import rocks.massi.trollsgames.data.Game;
+import rocks.massi.trollsgames.data.Quote;
 import rocks.massi.trollsgames.data.ServerInformation;
 import rocks.massi.trollsgames.data.User;
 
@@ -20,4 +21,10 @@ public interface TrollsServer {
 
     @RequestLine("GET /v1/server/information")
     ServerInformation getInformation();
+
+    @RequestLine("GET /v1/server/quote")
+    Quote getQuote();
+
+    @RequestLine("GET /v1/games/search?q={search}")
+    List<Game> search(@Param("search") String search);
 }

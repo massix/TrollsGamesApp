@@ -24,6 +24,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +39,7 @@ import rocks.massi.trollsgames.R;
 import rocks.massi.trollsgames.adapter.GamesAdapter;
 import rocks.massi.trollsgames.async.CacheAsyncLoader;
 import rocks.massi.trollsgames.async.CacheAsyncWriter;
+import rocks.massi.trollsgames.async.SearchAsyncConnector;
 import rocks.massi.trollsgames.async.UsersAsyncConnector;
 import rocks.massi.trollsgames.constants.Extra;
 import rocks.massi.trollsgames.data.Game;
@@ -55,6 +57,8 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
     private GamesAdapter gamesAdapter;
     private boolean operationPending;
+    private boolean displayingQuote = false;
+    private boolean resultsFromSearch = false;
 
     private ProgressBar loadingUsersPb;
     private TextView loadingUsersTv;
@@ -156,8 +160,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
         if (usersFetchedEvent.isFromCache()) {
             loadingUsersTv.setText(R.string.loading_end_cache);
-        }
-        else {
+        } else if (!displayingQuote) {
             loadingUsersTv.setText(R.string.loading_end);
         }
 
@@ -237,6 +240,34 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         if (debugActivated) {
             Snackbar.make(findViewById(R.id.fab), "Invalid cache " + event.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onQuoteReceivedEvent(final QuoteReceivedEvent event) {
+        Spanned formattedText = Html.fromHtml(
+                "<p>" + event.getQuote().getQuote() + "</p>" +
+                        "<footer>-- " + event.getQuote().getAuthor() + "</footer>");
+        displayingQuote = true;
+        loadingUsersTv.setText(formattedText);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSearchFinishedEvent(final SearchFinishedEvent event) {
+        loadingUsersTv.setVisibility(View.INVISIBLE);
+        loadingUsersPb.setIndeterminate(false);
+        loadingUsersPb.setVisibility(View.INVISIBLE);
+        resultsFromSearch = true;
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(getString(R.string.search_header));
+            getSupportActionBar().setSubtitle(getString(R.string.search_result, event.getGames().size()));
+        }
+
+        shownGames.clear();
+        shownGames.addAll(event.getGames());
+        gamesAdapter.notifyDataSetChanged();
     }
 
     @SuppressWarnings("deprecation")
@@ -320,6 +351,33 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             }
         });
+
+        final SearchView searchView = findViewById(R.id.game_search_tv);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                // Clear shown games
+                shownGames.clear();
+                gamesAdapter.notifyDataSetChanged();
+
+                // Show progress bar
+                loadingUsersPb.setVisibility(View.VISIBLE);
+                loadingUsersPb.setIndeterminate(true);
+
+                // Remove focus
+                searchView.clearFocus();
+
+                // Start asynchronous search
+                new SearchAsyncConnector(query, getString(R.string.server)).execute();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     @Override
@@ -387,13 +445,11 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
         ListView lv = findViewById(R.id.gameslist);
 
-        if (id == R.id.sort_alpha && !shownGames.isEmpty()) {
+        if (id == R.id.sort_alpha && !shownGames.isEmpty() && !resultsFromSearch) {
             Log.i("GamesListActivity", "Alphabetical order");
             currentRanking = CurrentRanking.ALPHABETICAL;
             rebuildShownGamesList();
-        }
-
-        else if (id == R.id.sort_rank && !shownGames.isEmpty()) {
+        } else if (id == R.id.sort_rank && !shownGames.isEmpty() && !resultsFromSearch) {
             Log.i("GamesListActivity", "Rank order");
             currentRanking = CurrentRanking.BGG_RANKING;
             rebuildShownGamesList();
@@ -402,9 +458,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         else if (id == R.id.game_random && !shownGames.isEmpty()) {
             EventBus.getDefault().post(new GameSelectedEvent(
                     shownGames.get(new Random().nextInt(shownGames.size()))));
-        }
-
-        else if (id == R.id.expansions_toggle && !shownGames.isEmpty()) {
+        } else if (id == R.id.expansions_toggle && !shownGames.isEmpty() && !resultsFromSearch) {
             Log.i("GamesListActivity", "Toggle expansions");
             if (expansionsHidden) {
                 expansionsHidden = false;
@@ -493,6 +547,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             getSupportActionBar().setTitle(activeUser.getForumNick());
 
         drawer.closeDrawer(GravityCompat.START);
+        resultsFromSearch = false;
 
         return true;
     }
