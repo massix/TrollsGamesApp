@@ -139,5 +139,6 @@
     <string name="register_verify_email" translatable="true">Please check your email %1$s</string>
     <string name="register_verify_error" translatable="true">Registration failed: %1$s</string>
     <string name="login_header">Login</string>
+    <string name="gameslist_you">Your collection!</string>
 
 </resources>

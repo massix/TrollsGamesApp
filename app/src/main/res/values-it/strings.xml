@@ -130,6 +130,7 @@
     <string name="register_error_missing_fields">Non ho tutte le informazioni!</string>
     <string name="register_error_passwords_mismatch">Le password non combaciano!</string>
     <string name="login_header">Login</string>
+    <string name="gameslist_you">La tua collezione!</string>
 
 
 </resources>

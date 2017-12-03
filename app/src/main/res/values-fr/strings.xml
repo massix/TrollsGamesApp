@@ -132,5 +132,6 @@
     <string name="register_error_missing_fields">Il manque de choses là !</string>
     <string name="register_error_passwords_mismatch">Vos mots de passe différent</string>
     <string name="login_header">Effectuez le login</string>
+    <string name="gameslist_you">Votre ludothèque!</string>
 
 </resources>

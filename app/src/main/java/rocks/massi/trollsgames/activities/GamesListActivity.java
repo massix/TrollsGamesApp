@@ -537,8 +537,13 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         gamesAdapter.notifyDataSetChanged();
         lv.setSelectionAfterHeaderView();
 
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setTitle(activeUser.getForumNick());
+        if (getSupportActionBar() != null) {
+            if (activeUser.getEmail().equals(loggedInUser.getEmail())) {
+                getSupportActionBar().setTitle(R.string.gameslist_you);
+            } else {
+                getSupportActionBar().setTitle(activeUser.getForumNick());
+            }
+        }
 
         drawer.closeDrawer(GravityCompat.START);
         resultsFromSearch = false;
