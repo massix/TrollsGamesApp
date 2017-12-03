@@ -3,10 +3,14 @@ package rocks.massi.trollsgames.async;
 import android.os.AsyncTask;
 import android.util.Log;
 import feign.Feign;
+import feign.FeignException;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import lombok.RequiredArgsConstructor;
+import org.greenrobot.eventbus.EventBus;
 import rocks.massi.trollsgames.data.User;
+import rocks.massi.trollsgames.events.UserRegisteredEvent;
+import rocks.massi.trollsgames.events.UserRegistrationFailedEvent;
 import rocks.massi.trollsgames.services.TrollsServer;
 
 @RequiredArgsConstructor
@@ -26,9 +30,14 @@ public class LoginRegisterAsyncConnector extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         createConnector();
-        Log.i(getClass().getName(), "Registering user " + user.toString());
-        User ret = connector.register(user);
-        Log.i(getClass().getName(), "Received user " + ret.toString());
+        try {
+            Log.i(getClass().getName(), "Registering user " + user.toString());
+            User ret = connector.register(user);
+            Log.i(getClass().getName(), "Received user " + ret.toString());
+            EventBus.getDefault().post(new UserRegisteredEvent(ret));
+        } catch (FeignException ex) {
+            EventBus.getDefault().post(new UserRegistrationFailedEvent(ex.getMessage()));
+        }
         return null;
     }
 }

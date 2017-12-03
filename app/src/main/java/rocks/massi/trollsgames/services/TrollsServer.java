@@ -29,7 +29,7 @@ public interface TrollsServer {
     @RequestLine("GET /v1/games/search?q={search}")
     List<Game> search(@Param("search") String search);
 
-    @RequestLine("POST /v1/users/register")
+    @RequestLine("POST /v1/users/register?redirect=tdj://massi.rocks/login")
     @Headers({"Content-Type: application/json"})
     User register(User user);
 }

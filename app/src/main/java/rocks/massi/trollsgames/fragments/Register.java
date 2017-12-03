@@ -4,20 +4,55 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import lombok.NoArgsConstructor;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import rocks.massi.trollsgames.R;
 import rocks.massi.trollsgames.async.LoginRegisterAsyncConnector;
 import rocks.massi.trollsgames.data.User;
+import rocks.massi.trollsgames.events.UserRegisteredEvent;
+import rocks.massi.trollsgames.events.UserRegistrationFailedEvent;
 
 @NoArgsConstructor
 public class Register extends Fragment {
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(UserRegisteredEvent event) {
+        Log.i(getClass().getName(), "Registered user " + event.getUser().toString());
+        if (getView() != null) {
+            Snackbar.make(getView(), "Verify your email, " + event.getUser().getEmail(), Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(UserRegistrationFailedEvent event) {
+        Log.e(getClass().getName(), "Registration failed " + event.getError());
+        if (getView() != null) {
+            Snackbar.make(getView(), event.getError(), Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,20 +102,56 @@ public class Register extends Fragment {
         });
 
         // Create the listener for the button
-        Button submitButton = view.findViewById(R.id.register_submit);
+        final Button submitButton = view.findViewById(R.id.register_submit);
         submitButton.setOnClickListener(new View.OnClickListener() {
+            private final EditText bggNick = view.findViewById(R.id.edit_bggNick);
+            private final EditText forumNick = view.findViewById(R.id.edit_forumNick);
+            private final EditText email = view.findViewById(R.id.edit_email);
+            private final EditText password = view.findViewById(R.id.edit_password);
+
+            private boolean checkFields() {
+                // Fields can't be empty
+                if (bggNick.getText().toString().isEmpty() ||
+                        forumNick.getText().toString().isEmpty() ||
+                        email.getText().toString().isEmpty() ||
+                        password.getText().toString().isEmpty()) {
+                    Snackbar.make(view, "There are some empty fields!", Snackbar.LENGTH_SHORT).show();
+                    return false;
+                }
+
+                // Email must be valid
+                if (!email.getText().toString().matches("^.+@.+$")) {
+                    Snackbar.make(view, "Invalid mail!", Snackbar.LENGTH_SHORT).show();
+                    return false;
+                }
+
+                // Passwords must match
+                String verifyPassword = ((EditText) view.findViewById(R.id.edit_password_verify)).getText().toString();
+                if (!verifyPassword.equals(password.getText().toString())) {
+                    Snackbar.make(view, "Passwords don't match!", Snackbar.LENGTH_SHORT).show();
+                    return false;
+                }
+
+                // If not bgg handled, bggnick must be equal to forumnick
+                if (!bggHandledCb.isChecked() && (!bggNick.getText().toString().equals(forumNick.getText().toString()))) {
+                    Snackbar.make(view, "Something wrong.", Snackbar.LENGTH_SHORT).show();
+                }
+
+                return true;
+            }
 
             @Override
             public void onClick(View v) {
-                String bggNick = ((EditText) view.findViewById(R.id.edit_bggNick)).getText().toString();
-                String forumNick = ((EditText) view.findViewById(R.id.edit_forumNick)).getText().toString();
-                String email = ((EditText) view.findViewById(R.id.edit_email)).getText().toString();
-                String password = ((EditText) view.findViewById(R.id.edit_password)).getText().toString();
-                boolean bggHandled = bggHandledCb.isChecked();
-
-                // TODO: check that the parameters are correct!
-                User toBeRegistered = new User(bggNick, forumNick, email, password, bggHandled);
-                new LoginRegisterAsyncConnector(toBeRegistered, getActivity().getString(R.string.server)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+                if (checkFields()) {
+                    User toBeRegistered = new User(bggNick.getText().toString(),
+                            forumNick.getText().toString(),
+                            email.getText().toString(),
+                            password.getText().toString(),
+                            bggHandledCb.isChecked());
+                    submitButton.setEnabled(false);
+                    submitButton.setText("Please wait");
+                    new LoginRegisterAsyncConnector(toBeRegistered, getActivity().getString(R.string.server)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
             }
         });
 
