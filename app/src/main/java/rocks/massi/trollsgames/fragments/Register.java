@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -23,14 +24,28 @@ import rocks.massi.trollsgames.data.User;
 import rocks.massi.trollsgames.events.UserRegisteredEvent;
 import rocks.massi.trollsgames.events.UserRegistrationFailedEvent;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+
 @NoArgsConstructor
 public class Register extends Fragment {
 
+    @SneakyThrows
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(UserRegisteredEvent event) {
         Log.i(getClass().getName(), "Registered user " + event.getUser().toString());
         if (getView() != null) {
             Snackbar.make(getView(), getString(R.string.register_verify_email, event.getUser().getEmail()), Snackbar.LENGTH_LONG).show();
+        }
+
+        // Store email to cache
+        File emailFile = new File(getActivity().getCacheDir() + "/email.data");
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(emailFile))) {
+            bufferedWriter.write(event.getUser().getEmail());
+        } catch (FileNotFoundException ex) {
+            // Do nothing
         }
     }
 

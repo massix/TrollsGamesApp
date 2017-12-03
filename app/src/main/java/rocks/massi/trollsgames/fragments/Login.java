@@ -38,7 +38,6 @@ public class Login extends Fragment {
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-
     }
 
     @SneakyThrows
