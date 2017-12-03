@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context="rocks.massi.trollsgames.fragments.Login">
 
 
     <TextView
-            android:text="FRAGMENT LOGIN"
+            android:text="@string/login_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2"/>
+            android:id="@+id/login_header" android:textAlignment="center" android:textSize="21sp"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/login_email" android:hint="@string/register_email"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/login_password" android:hint="@string/register_password"/>
+    <Button
+            android:text="@string/register_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/login_submit"/>
 
-</FrameLayout>
+</LinearLayout>

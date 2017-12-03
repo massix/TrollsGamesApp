@@ -151,7 +151,7 @@ public class Register extends Fragment {
                             bggHandledCb.isChecked());
                     submitButton.setEnabled(false);
                     submitButton.setText(R.string.register_submit_wait);
-                    new LoginRegisterAsyncConnector(toBeRegistered, getActivity().getString(R.string.server)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new LoginRegisterAsyncConnector(toBeRegistered, getActivity().getString(R.string.server), LoginRegisterAsyncConnector.Action.REGISTER_ACTION).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
         });

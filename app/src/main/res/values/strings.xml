@@ -128,7 +128,7 @@
     <string name="register_password" translatable="true">Password</string>
     <string name="register_password_verify" translatable="true">Verify password</string>
     <string name="register_bggHandled" translatable="true">I own a BGG account!</string>
-    <string name="register_submit" translatable="true">I want to create an account!</string>
+    <string name="register_submit" translatable="true">Go!</string>
     <string name="register_submit_wait" translatable="true">Please wait…</string>
 
     <string name="register_error_missing_fields" translatable="true">Some fields are missing!</string>
@@ -138,5 +138,6 @@
 
     <string name="register_verify_email" translatable="true">Please check your email %1$s</string>
     <string name="register_verify_error" translatable="true">Registration failed: %1$s</string>
+    <string name="login_header">Login</string>
 
 </resources>

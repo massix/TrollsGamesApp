@@ -127,9 +127,10 @@
     <string name="register_submit_wait" translatable="true">Patientez un instant…</string>
     <string name="register_verify_email">Vérifiez votre email (%1$s)</string>
     <string name="register_verify_error">Échec pendant la création du compte: %1$s</string>
-    <string name="register_error_generic">Y a un souci...</string>
+    <string name="register_error_generic">Y a un souci…</string>
     <string name="register_error_missing_email">Votre adresse email semble invalide!</string>
     <string name="register_error_missing_fields">Il manque de choses là !</string>
     <string name="register_error_passwords_mismatch">Vos mots de passe différent</string>
+    <string name="login_header">Effectuez le login</string>
 
 </resources>

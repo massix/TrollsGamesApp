@@ -3,10 +3,8 @@ package rocks.massi.trollsgames.services;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
-import rocks.massi.trollsgames.data.Game;
-import rocks.massi.trollsgames.data.Quote;
-import rocks.massi.trollsgames.data.ServerInformation;
-import rocks.massi.trollsgames.data.User;
+import feign.Response;
+import rocks.massi.trollsgames.data.*;
 
 import java.util.List;
 
@@ -32,4 +30,8 @@ public interface TrollsServer {
     @RequestLine("POST /v1/users/register?redirect=tdj://massi.rocks/login")
     @Headers({"Content-Type: application/json"})
     User register(User user);
+
+    @RequestLine("POST /v1/users/login")
+    @Headers({"Content-Type: application/json"})
+    Response login(LoginInformation loginInformation);
 }
