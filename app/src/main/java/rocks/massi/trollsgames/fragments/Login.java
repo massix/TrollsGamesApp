@@ -53,6 +53,8 @@ public class Login extends Fragment {
             // TODO: Verify token
             Log.i(getClass().getName(), "Got token from file " + token);
             bufferedReader.close();
+        } catch (FileNotFoundException exception) {
+            // Do nothing
         }
 
         // Load email from cache
@@ -60,6 +62,8 @@ public class Login extends Fragment {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(emailFile))) {
             savedEmail = bufferedReader.readLine();
             Log.i(getClass().getName(), "Got email from file " + savedEmail);
+        } catch (FileNotFoundException exception) {
+            // Do nothing
         }
     }
 
