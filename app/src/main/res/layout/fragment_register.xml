@@ -50,5 +50,10 @@
             android:text="I own a BGG Account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/cb_bggHandled" android:checked="true"/>
+    <Button
+            android:text="Submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/register_submit"
+            style="@style/Widget.AppCompat.Button"/>
 
 </LinearLayout>

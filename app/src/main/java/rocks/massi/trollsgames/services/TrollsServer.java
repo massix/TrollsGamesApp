@@ -1,5 +1,6 @@
 package rocks.massi.trollsgames.services;
 
+import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
 import rocks.massi.trollsgames.data.Game;
@@ -27,4 +28,8 @@ public interface TrollsServer {
 
     @RequestLine("GET /v1/games/search?q={search}")
     List<Game> search(@Param("search") String search);
+
+    @RequestLine("POST /v1/users/register")
+    @Headers({"Content-Type: application/json"})
+    User register(User user);
 }

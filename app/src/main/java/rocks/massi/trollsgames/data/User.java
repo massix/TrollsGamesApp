@@ -2,10 +2,12 @@ package rocks.massi.trollsgames.data;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
 
 @Data
+@ToString
 @RequiredArgsConstructor
 public class User {
     private final String bggNick;
@@ -16,9 +18,4 @@ public class User {
 
     private List<Integer> collection;
     private List<Game> gamesCollection;
-
-    @Override
-    public String toString() {
-        return forumNick;
-    }
 }

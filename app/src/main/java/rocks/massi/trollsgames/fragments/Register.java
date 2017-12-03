@@ -1,6 +1,7 @@
 package rocks.massi.trollsgames.fragments;
 
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,12 +10,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.*;
 import lombok.NoArgsConstructor;
 import rocks.massi.trollsgames.R;
+import rocks.massi.trollsgames.async.LoginRegisterAsyncConnector;
+import rocks.massi.trollsgames.data.User;
 
 @NoArgsConstructor
 public class Register extends Fragment {
@@ -47,7 +47,7 @@ public class Register extends Fragment {
         });
 
         // Changes in forumnick edit should be reflected in bggnick if account is not bgg handled
-        EditText editForumNick = view.findViewById(R.id.edit_forumNick);
+        final EditText editForumNick = view.findViewById(R.id.edit_forumNick);
         editForumNick.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -63,6 +63,24 @@ public class Register extends Fragment {
                     EditText editBggNick = view.findViewById(R.id.edit_bggNick);
                     editBggNick.setText(s);
                 }
+            }
+        });
+
+        // Create the listener for the button
+        Button submitButton = view.findViewById(R.id.register_submit);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                String bggNick = ((EditText) view.findViewById(R.id.edit_bggNick)).getText().toString();
+                String forumNick = ((EditText) view.findViewById(R.id.edit_forumNick)).getText().toString();
+                String email = ((EditText) view.findViewById(R.id.edit_email)).getText().toString();
+                String password = ((EditText) view.findViewById(R.id.edit_password)).getText().toString();
+                boolean bggHandled = bggHandledCb.isChecked();
+
+                // TODO: check that the parameters are correct!
+                User toBeRegistered = new User(bggNick, forumNick, email, password, bggHandled);
+                new LoginRegisterAsyncConnector(toBeRegistered, getActivity().getString(R.string.server)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
             }
         });
 
