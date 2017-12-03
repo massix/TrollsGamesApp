@@ -150,7 +150,7 @@ public class Register extends Fragment {
                             password.getText().toString(),
                             bggHandledCb.isChecked());
                     submitButton.setEnabled(false);
-                    submitButton.setText("Please wait");
+                    submitButton.setText(R.string.register_submit_wait);
                     new LoginRegisterAsyncConnector(toBeRegistered, getActivity().getString(R.string.server)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
