@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.*;
+import com.airbnb.deeplinkdispatch.DeepLink;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -49,6 +50,7 @@ import rocks.massi.trollsgames.events.*;
 import java.io.File;
 import java.util.*;
 
+@DeepLink("tdj://massi.rocks/gameslist")
 public class GamesListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
 
     private List<User> users;
@@ -174,12 +176,10 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             users.add(userFetchEvent.getUser());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 loadingUsersPb.setProgress(loadingUsersPb.getProgress() + 1, true);
-            }
-            else {
+            } else {
                 loadingUsersPb.setProgress(loadingUsersPb.getProgress() + 1);
             }
-        }
-        else {
+        } else {
             loadingUsersPb.setIndeterminate(false);
             loadingUsersPb.setMax(userFetchEvent.getTotalUsers());
         }
@@ -309,8 +309,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
                 loadingUsersPb.setVisibility(View.VISIBLE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     loadingUsersPb.setProgress(0, true);
-                }
-                else {
+                } else {
                     loadingUsersPb.setProgress(0);
                 }
                 loadingUsersTv.setVisibility(View.VISIBLE);
@@ -453,9 +452,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             Log.i("GamesListActivity", "Rank order");
             currentRanking = CurrentRanking.BGG_RANKING;
             rebuildShownGamesList();
-        }
-
-        else if (id == R.id.game_random && !shownGames.isEmpty()) {
+        } else if (id == R.id.game_random && !shownGames.isEmpty()) {
             EventBus.getDefault().post(new GameSelectedEvent(
                     shownGames.get(new Random().nextInt(shownGames.size()))));
         } else if (id == R.id.expansions_toggle && !shownGames.isEmpty() && !resultsFromSearch) {
@@ -463,8 +460,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             if (expansionsHidden) {
                 expansionsHidden = false;
                 item.setTitle(R.string.hide_expansions);
-            }
-            else {
+            } else {
                 expansionsHidden = true;
                 item.setTitle(R.string.show_expansions);
             }
@@ -561,9 +557,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
             if (g != null && g.isExtension()) {
                 if (! expansionsHidden && ! shownGames.contains(g))
                     shownGames.add(g);
-            }
-
-            else if (g != null && ! shownGames.contains(g))
+            } else if (g != null && !shownGames.contains(g))
                 shownGames.add(g);
         }
 

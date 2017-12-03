@@ -10,8 +10,9 @@ import java.util.List;
 public class User {
     private final String bggNick;
     private final String forumNick;
-    private final String games;
-    private final String wants;
+    private final String email;
+    private final String password;
+    private final boolean bggHandled;
 
     private List<Integer> collection;
     private List<Game> gamesCollection;

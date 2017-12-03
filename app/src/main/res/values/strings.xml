@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <string name="app_name" translatable="false">Trolls De Jeux</string>
+    <string name="title_activity_login_register">Login or Register</string>
     <string name="app_subtitle" translatable="false">Association Antiboise\nJeux de Société</string>
     <string name="sort_alpha" translatable="true">Alphabetical order</string>
     <string name="sort_bgg" translatable="true">BGG Ranking</string>
@@ -117,4 +118,9 @@
 
     <string name="search_header" translatable="true">Search result</string>
     <string name="search_result" translatable="true">%1$d games found</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
