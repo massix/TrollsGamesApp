@@ -15,12 +15,50 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.airbnb.deeplinkdispatch.DeepLink;
 import lombok.NoArgsConstructor;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import rocks.massi.trollsgames.R;
+import rocks.massi.trollsgames.activities.GamesListActivity;
 import rocks.massi.trollsgames.async.LoginRegisterAsyncConnector;
 import rocks.massi.trollsgames.data.LoginInformation;
+import rocks.massi.trollsgames.events.LoginFailEvent;
+import rocks.massi.trollsgames.events.LoginSuccessEvent;
 
 @NoArgsConstructor
 public class Login extends Fragment {
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(LoginSuccessEvent event) {
+        Log.i(getClass().getName(), "User logged in " + event.getUser() + "\n" + event.getToken());
+        Intent intent = new Intent(getContext(), GamesListActivity.class);
+
+        // Remove this activity from the backstack
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("AUTHENTICATION_TOKEN", event.getToken());
+        intent.putExtra("AUTHENTICATION_USER", event.getUser());
+        startActivity(intent);
+        getActivity().finish();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(LoginFailEvent event) {
+        if (getView() != null) {
+            Snackbar.make(getView(), "Incorrect user or password (or both)", Snackbar.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -11,9 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.greenrobot.eventbus.EventBus;
 import rocks.massi.trollsgames.data.LoginInformation;
 import rocks.massi.trollsgames.data.User;
+import rocks.massi.trollsgames.events.LoginFailEvent;
+import rocks.massi.trollsgames.events.LoginSuccessEvent;
 import rocks.massi.trollsgames.events.UserRegisteredEvent;
 import rocks.massi.trollsgames.events.UserRegistrationFailedEvent;
 import rocks.massi.trollsgames.services.TrollsServer;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 public class LoginRegisterAsyncConnector extends AsyncTask<Void, Void, Void> {
@@ -44,9 +48,18 @@ public class LoginRegisterAsyncConnector extends AsyncTask<Void, Void, Void> {
                     LoginInformation loginInformation = (LoginInformation) parameter;
                     Log.i(getClass().getName(), "Logging in user");
                     Response ret = connector.login(loginInformation);
-                    Log.i(getClass().getName(), ret.toString());
-                } catch (FeignException e) {
+                    if (ret.status() == 200) {
+                        User user = (User) new GsonDecoder().decode(ret, User.class);
+                        String token = ret.headers().get("Authorization").iterator().next();
+                        EventBus.getDefault().post(new LoginSuccessEvent(user, token.replace("Bearer ", "")));
+                        Log.i(getClass().getName(), "Logged in user " + user.toString());
+                    } else {
+                        Log.e(getClass().getName(), "Failure " + ret.toString());
+                        EventBus.getDefault().post(new LoginFailEvent(ret.body().toString()));
+                    }
+                } catch (FeignException | IOException e) {
                     Log.e(getClass().getName(), e.getMessage());
+                    EventBus.getDefault().post(new LoginFailEvent(e.getMessage()));
                 }
                 break;
 

@@ -56,6 +56,8 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
     private List<User> users;
     private List<Game> shownGames;
     private User activeUser;
+    private User loggedInUser;
+    private String token;
 
     private GamesAdapter gamesAdapter;
     private boolean operationPending;
@@ -78,7 +80,6 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
     private SensorHandling sensorHandling;
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onSensorChanged(SensorEvent event) {
         float x = event.values[0];
@@ -169,7 +170,6 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         new CacheAsyncWriter(getCacheDir(), users).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 100)
     public void onUserEvent(final UserFetchEvent userFetchEvent) {
         if (userFetchEvent.isFinished()) {
@@ -185,7 +185,6 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGameSelectedEvent(final GameSelectedEvent gameSelectedEvent) {
         Intent i = new Intent(this, GameDisplayActivity.class);
@@ -193,7 +192,6 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         startActivity(i);
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNetworkErrorEvent(final MissingConnectionEvent event) {
         loadingUsersTv.setText(R.string.missing_network);
@@ -202,7 +200,6 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         operationPending = false;
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onServerInformationEvent(final ServerInformationEvent event) {
         if (debugActivated) {
@@ -210,7 +207,6 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onServerOfflineEvent(final ServerOfflineEvent event) {
         loadingUsersTv.setText(R.string.server_offline);
@@ -219,13 +215,11 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         operationPending = false;
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCacheFoundEvent(final CacheFoundEvent event) {
         loadingUsersTv.setText(R.string.loading_cache);
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCacheStoredEvent(final CacheStoredEvent event) {
         if (debugActivated) {
@@ -233,7 +227,6 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onInvalidCacheEvent(final CacheInvalidEvent event) {
         loadingUsersTv.setText(R.string.cache_error);
@@ -242,7 +235,6 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onQuoteReceivedEvent(final QuoteReceivedEvent event) {
         Spanned formattedText = Html.fromHtml(
@@ -252,7 +244,6 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         loadingUsersTv.setText(formattedText);
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSearchFinishedEvent(final SearchFinishedEvent event) {
         loadingUsersTv.setVisibility(View.INVISIBLE);
@@ -270,7 +261,6 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
         gamesAdapter.notifyDataSetChanged();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -290,6 +280,14 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
         loadingUsersTv.setText(R.string.intro);
         new CacheAsyncLoader(getCacheDir()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        // Get user information
+        loggedInUser = (User) getIntent().getSerializableExtra("AUTHENTICATION_USER");
+        Log.i(getClass().getName(), "Logged in as user " + loggedInUser.getEmail());
+        toolbar.setSubtitle(loggedInUser.getEmail());
+
+        // Get token which will be used for subsequent calls
+        token = getIntent().getStringExtra("AUTHENTICATION_TOKEN");
 
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
