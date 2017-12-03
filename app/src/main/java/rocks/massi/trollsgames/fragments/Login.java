@@ -57,6 +57,11 @@ public class Login extends Fragment {
     public void onEvent(LoginFailEvent event) {
         if (getView() != null) {
             Snackbar.make(getView(), "Incorrect user or password (or both)", Snackbar.LENGTH_SHORT).show();
+
+            // Reset button
+            Button submit = getView().findViewById(R.id.login_submit);
+            submit.setEnabled(true);
+            submit.setText(R.string.register_submit);
         }
     }
 
@@ -90,6 +95,8 @@ public class Login extends Fragment {
                 Log.i(getClass().getName(), "Sending login " + loginInformation.toString());
                 new LoginRegisterAsyncConnector(loginInformation, getString(R.string.server), LoginRegisterAsyncConnector.Action.LOGIN_ACTION)
                         .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                loginSubmit.setEnabled(false);
+                loginSubmit.setText(R.string.register_submit_wait);
             }
         });
 
