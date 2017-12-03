@@ -30,7 +30,7 @@ public class Register extends Fragment {
     public void onEvent(UserRegisteredEvent event) {
         Log.i(getClass().getName(), "Registered user " + event.getUser().toString());
         if (getView() != null) {
-            Snackbar.make(getView(), "Verify your email, " + event.getUser().getEmail(), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(getView(), getString(R.string.register_verify_email, event.getUser().getEmail()), Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -38,7 +38,8 @@ public class Register extends Fragment {
     public void onEvent(UserRegistrationFailedEvent event) {
         Log.e(getClass().getName(), "Registration failed " + event.getError());
         if (getView() != null) {
-            Snackbar.make(getView(), event.getError(), Snackbar.LENGTH_LONG).show();
+            Snackbar.make(getView(), getString(R.string.register_verify_error, event.getError()), Snackbar.LENGTH_LONG).show();
+            getView().findViewById(R.id.register_submit).setEnabled(true);
         }
     }
 
@@ -115,26 +116,26 @@ public class Register extends Fragment {
                         forumNick.getText().toString().isEmpty() ||
                         email.getText().toString().isEmpty() ||
                         password.getText().toString().isEmpty()) {
-                    Snackbar.make(view, "There are some empty fields!", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(view, R.string.register_error_missing_fields, Snackbar.LENGTH_SHORT).show();
                     return false;
                 }
 
                 // Email must be valid
                 if (!email.getText().toString().matches("^.+@.+$")) {
-                    Snackbar.make(view, "Invalid mail!", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(view, R.string.register_error_missing_email, Snackbar.LENGTH_SHORT).show();
                     return false;
                 }
 
                 // Passwords must match
                 String verifyPassword = ((EditText) view.findViewById(R.id.edit_password_verify)).getText().toString();
                 if (!verifyPassword.equals(password.getText().toString())) {
-                    Snackbar.make(view, "Passwords don't match!", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(view, R.string.register_error_passwords_mismatch, Snackbar.LENGTH_SHORT).show();
                     return false;
                 }
 
                 // If not bgg handled, bggnick must be equal to forumnick
                 if (!bggHandledCb.isChecked() && (!bggNick.getText().toString().equals(forumNick.getText().toString()))) {
-                    Snackbar.make(view, "Something wrong.", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(view, R.string.register_error_generic, Snackbar.LENGTH_SHORT).show();
                 }
 
                 return true;

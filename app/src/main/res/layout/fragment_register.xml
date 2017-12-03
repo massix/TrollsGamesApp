@@ -9,7 +9,7 @@
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Please complete the form below" android:typeface="sans" android:textAlignment="center"
+            android:text="@string/register_header" android:typeface="sans" android:textAlignment="center"
             android:textSize="21sp" android:id="@+id/f_register_header"/>
 
     <!-- Nick on BGG -->
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/edit_bggNick" android:hint="Insert your nick on BGG"/>
+            android:id="@+id/edit_bggNick" android:hint="@string/register_bggNick"/>
 
 
     <EditText
@@ -26,33 +26,33 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/edit_forumNick" android:hint="Insert your display name"/>
+            android:id="@+id/edit_forumNick" android:hint="@string/register_forumNick"/>
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:ems="10"
             android:id="@+id/edit_email"
-            android:hint="Insert your email address" style="@style/Widget.AppCompat.EditText"/>
+            android:hint="@string/register_email" style="@style/Widget.AppCompat.EditText"/>
 
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/edit_password" android:hint="Insert your password"/>
+            android:id="@+id/edit_password" android:hint="@string/register_password"/>
     <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/edit_password_verify" android:hint="Verify your password"/>
+            android:id="@+id/edit_password_verify" android:hint="@string/register_password_verify"/>
     <CheckBox
-            android:text="I own a BGG Account"
+            android:text="@string/register_bggHandled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/cb_bggHandled" android:checked="true"/>
     <Button
-            android:text="Submit"
+            android:text="@string/register_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/register_submit"
             style="@style/Widget.AppCompat.Button"/>

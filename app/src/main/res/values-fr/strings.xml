@@ -116,4 +116,20 @@
     <string name="search_header" translatable="true">Recherche</string>
     <string name="search_result" translatable="true">%1$d jeux trouvés</string>
 
+    <string name="register_header" translatable="true">Veuillez compléter le formulaire</string>
+    <string name="register_bggNick" translatable="true">Nom de votre compte sur BGG</string>
+    <string name="register_forumNick" translatable="true">Nom d\'affichage</string>
+    <string name="register_email" translatable="true">Votre addresse email</string>
+    <string name="register_password" translatable="true">Mot de passe</string>
+    <string name="register_password_verify" translatable="true">Vérifiez votre mot de passe</string>
+    <string name="register_bggHandled" translatable="true">Je possède un compte sur BGG!</string>
+    <string name="register_submit" translatable="true">C\'est parti!</string>
+    <string name="register_submit_wait" translatable="true">Patientez un instant…</string>
+    <string name="register_verify_email">Vérifiez votre email (%1$s)</string>
+    <string name="register_verify_error">Échec pendant la création du compte: %1$s</string>
+    <string name="register_error_generic">Y a un souci...</string>
+    <string name="register_error_missing_email">Votre adresse email semble invalide!</string>
+    <string name="register_error_missing_fields">Il manque de choses là !</string>
+    <string name="register_error_passwords_mismatch">Vos mots de passe différent</string>
+
 </resources>
