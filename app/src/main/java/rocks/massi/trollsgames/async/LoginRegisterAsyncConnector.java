@@ -11,20 +11,26 @@ import lombok.RequiredArgsConstructor;
 import org.greenrobot.eventbus.EventBus;
 import rocks.massi.trollsgames.data.LoginInformation;
 import rocks.massi.trollsgames.data.User;
-import rocks.massi.trollsgames.events.LoginFailEvent;
-import rocks.massi.trollsgames.events.LoginSuccessEvent;
-import rocks.massi.trollsgames.events.UserRegisteredEvent;
-import rocks.massi.trollsgames.events.UserRegistrationFailedEvent;
+import rocks.massi.trollsgames.data.UserInformation;
+import rocks.massi.trollsgames.events.*;
 import rocks.massi.trollsgames.services.TrollsServer;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 @RequiredArgsConstructor
 public class LoginRegisterAsyncConnector extends AsyncTask<Void, Void, Void> {
 
-    public static enum Action {
+    public enum Action {
         REGISTER_ACTION,
-        LOGIN_ACTION
+        LOGIN_ACTION,
+        CHECK_TOKEN_ACTION
+    }
+
+    @RequiredArgsConstructor
+    public static class CheckTokenObject {
+        private final String nick;
+        private final String token;
     }
 
     private final Object parameter;
@@ -74,6 +80,22 @@ public class LoginRegisterAsyncConnector extends AsyncTask<Void, Void, Void> {
                     EventBus.getDefault().post(new UserRegistrationFailedEvent(ex.getMessage()));
                 }
                 break;
+            case CHECK_TOKEN_ACTION:
+                try {
+                    CheckTokenObject token = (CheckTokenObject) parameter;
+                    Log.i(getClass().getName(), "Checking token " + token.token + " for user " + token.nick);
+                    HashMap<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + token.token);
+                    UserInformation userInformation = connector.getUserInformation(headers, token.nick);
+                    Log.i(getClass().getName(), "Verified user " + userInformation.getEmail());
+
+                    // Get user
+                    User u = connector.getUser(userInformation.getUser());
+
+                    EventBus.getDefault().post(new TokenVerificationSuccess(userInformation, u));
+                } catch (FeignException e) {
+                    EventBus.getDefault().post(new TokenVerificationFailure());
+                }
         }
         return null;
     }

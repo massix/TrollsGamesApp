@@ -92,6 +92,13 @@ public class Login extends Fragment {
             Log.i(getClass().getName(), "Stored email to disk");
         }
 
+        // Store user to disk
+        File userFile = new File(getActivity().getCacheDir() + "/user.data");
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(userFile))) {
+            bufferedWriter.write(event.getUser().getBggNick());
+            Log.i(getClass().getName(), "Stored user to disk");
+        }
+
         // Remove this activity from the backstack
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("AUTHENTICATION_TOKEN", event.getToken());

@@ -316,7 +316,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().setTitle(R.string.app_name);
-                    getSupportActionBar().setSubtitle("");
+                    getSupportActionBar().setSubtitle(loggedInUser.getEmail());
                 }
 
                 operationPending = true;
@@ -483,7 +483,7 @@ public class GamesListActivity extends AppCompatActivity implements NavigationVi
 
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().setTitle(R.string.app_name);
-                        getSupportActionBar().setSubtitle("");
+                        getSupportActionBar().setSubtitle(loggedInUser.getEmail());
                     }
 
                     File cacheFile = new File(getCacheDir(), "users.json");
