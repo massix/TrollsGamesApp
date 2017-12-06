@@ -27,18 +27,23 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", "server", "https://prod.massi.rocks"
+            resValue "string", "app_d_name", "Trolls De Jeux"
             signingConfig signingConfigs.release
         }
 
         staging {
+            versionNameSuffix = "-PREPROD"
             applicationIdSuffix = ".staging"
             resValue "string", "server", "https://staging.massi.rocks"
+            resValue "string", "app_d_name", "Trolls De Preprod"
             signingConfig signingConfigs.release
         }
 
         debug {
+            versionNameSuffix = "-DEBUG"
             applicationIdSuffix = ".debug"
             resValue "string", "server", "https://staging.massi.rocks"
+            resValue "string", "app_d_name", "Trolls De Dev"
         }
     }
 }
