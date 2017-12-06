@@ -131,6 +131,7 @@
     <string name="register_error_passwords_mismatch">Le password non combaciano!</string>
     <string name="login_header">Login</string>
     <string name="gameslist_you">La tua collezione!</string>
+    <string name="title_activity_login_register">Login o Registrazione</string>
 
 
 </resources>

@@ -48,8 +48,11 @@ public class LoginRegisterActivity extends AppCompatActivity {
         });
 
         // Configure toolbar
-        getSupportActionBar().setTitle(R.string.app_name);
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.app_name);
+            getSupportActionBar().setSubtitle(R.string.title_activity_login_register);
+            getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        }
 
         final ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             @Override

@@ -133,5 +133,6 @@
     <string name="register_error_passwords_mismatch">Vos mots de passe différent</string>
     <string name="login_header">Effectuez le login</string>
     <string name="gameslist_you">Votre ludothèque!</string>
+    <string name="title_activity_login_register">Login ou s\'enregistrer</string>
 
 </resources>
