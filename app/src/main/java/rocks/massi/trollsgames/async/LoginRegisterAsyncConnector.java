@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import feign.Feign;
 import feign.FeignException;
+import feign.Request;
 import feign.Response;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
@@ -41,7 +42,7 @@ public class LoginRegisterAsyncConnector extends AsyncTask<Void, Void, Void> {
     private void createConnector() {
         if (connector == null) {
             Log.i(getClass().getName(), "Creating connector to " + serverAddress);
-            connector = Feign.builder().decoder(new GsonDecoder()).encoder(new GsonEncoder()).target(TrollsServer.class, serverAddress);
+            connector = Feign.builder().decoder(new GsonDecoder()).encoder(new GsonEncoder()).options(new Request.Options(600, 200)).target(TrollsServer.class, serverAddress);
         }
     }
 
