@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <string name="app_name" translatable="false">Trolls De Jeux</string>
+    <string name="title_activity_login_register" translatable="true">Login or Register</string>
     <string name="app_subtitle" translatable="false">Association Antiboise\nJeux de Société</string>
     <string name="sort_alpha" translatable="true">Alphabetical order</string>
     <string name="sort_bgg" translatable="true">BGG Ranking</string>
@@ -117,4 +118,27 @@
 
     <string name="search_header" translatable="true">Search result</string>
     <string name="search_result" translatable="true">%1$d games found</string>
+
+    <string name="action_settings" translatable="false">Settings</string>
+
+    <string name="register_header" translatable="true">Please complete the form below</string>
+    <string name="register_bggNick" translatable="true">Your BGG account name</string>
+    <string name="register_forumNick" translatable="true">Your name</string>
+    <string name="register_email" translatable="true">Email address</string>
+    <string name="register_password" translatable="true">Password</string>
+    <string name="register_password_verify" translatable="true">Verify password</string>
+    <string name="register_bggHandled" translatable="true">I own a BGG account!</string>
+    <string name="register_submit" translatable="true">Go!</string>
+    <string name="register_submit_wait" translatable="true">Please wait…</string>
+
+    <string name="register_error_missing_fields" translatable="true">Some fields are missing!</string>
+    <string name="register_error_missing_email" translatable="true">Invalid email!</string>
+    <string name="register_error_passwords_mismatch" translatable="true">Passwords don\'t match!</string>
+    <string name="register_error_generic" translatable="true">Something is wrong…</string>
+
+    <string name="register_verify_email" translatable="true">Please check your email %1$s</string>
+    <string name="register_verify_error" translatable="true">Registration failed: %1$s</string>
+    <string name="login_header">Login</string>
+    <string name="gameslist_you">Your collection!</string>
+
 </resources>
