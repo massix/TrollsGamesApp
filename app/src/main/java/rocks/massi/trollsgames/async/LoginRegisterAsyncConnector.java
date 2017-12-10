@@ -42,7 +42,7 @@ public class LoginRegisterAsyncConnector extends AsyncTask<Void, Void, Void> {
     private void createConnector() {
         if (connector == null) {
             Log.i(getClass().getName(), "Creating connector to " + serverAddress);
-            connector = Feign.builder().decoder(new GsonDecoder()).encoder(new GsonEncoder()).options(new Request.Options(600, 200)).target(TrollsServer.class, serverAddress);
+            connector = Feign.builder().decoder(new GsonDecoder()).encoder(new GsonEncoder()).options(new Request.Options(600, 1000)).target(TrollsServer.class, serverAddress);
         }
     }
 
