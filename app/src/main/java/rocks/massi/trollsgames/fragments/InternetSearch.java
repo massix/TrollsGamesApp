@@ -31,7 +31,6 @@ public class InternetSearch extends Fragment {
     private ProgressBar progressBar;
     private Game shownGame;
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(final GameSearchService event) {
         Log.i(getClass().toString(), "Open on external service");
@@ -40,7 +39,6 @@ public class InternetSearch extends Fragment {
     }
 
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(final GameFoundOnPhilibertEvent event) {
         gameSearchServices.add(new GameSearchService(ThirdPartyServices.PHILIBERT,
@@ -51,7 +49,6 @@ public class InternetSearch extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(final GameFoundOnTricTracEvent event) {
         GameSearchService service = new GameSearchService(
@@ -68,7 +65,6 @@ public class InternetSearch extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(final MissingConnectionEvent event) {
         progressBar.setVisibility(View.INVISIBLE);
