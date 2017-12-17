@@ -8,8 +8,8 @@ android {
         applicationId "rocks.massi.trollsgames"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 5
-        versionName "5.0"
+        versionCode 6
+        versionName "6.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
